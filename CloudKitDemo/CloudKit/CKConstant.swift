@@ -6,7 +6,22 @@
 //  Copyright © 2020 TTDP. All rights reserved.
 //
 
-import CloudKit
+import Foundation
 
-var titles = [String]()
-var recordIDs = [CKRecord.ID]()
+struct CKConstant {
+    
+    struct Record {
+        static let Ideas = "Ideas"
+    }
+    
+    struct Field {
+        static let Title = "title"
+        static let Description = "description"
+    }
+    
+    struct Sort {
+        static let CreationDate = "creationDate"
+        static let ModificationDate = "modificationDate"
+    }
+    
+}

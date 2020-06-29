@@ -24,6 +24,8 @@ class IdeasViewController: UIViewController {
         navigationItem.rightBarButtonItem = addButton
         
         setupViews()
+        
+        CloudKitManager.shared.query {}
     }
     
     // MARK: - View
