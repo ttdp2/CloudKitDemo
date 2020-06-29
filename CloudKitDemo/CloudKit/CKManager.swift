@@ -8,22 +8,22 @@
 
 import CloudKit
 
-class CloudKitHelper {
+class CloudKitManager {
     
-    static let shared = CloudKitHelper()
+    static let shared = CloudKitManager()
     
     static let privateDB = CKContainer.default().privateCloudDatabase
     
     func save(idea: Idea) {
-        let record = CKRecord(recordType: "Idea")
+        let record = CKRecord(recordType: "Ideas")
         record.setValue(idea.title, forKey: "title")
-        record.setValue(idea.date, forKey: "date")
+        record.setValue(idea.description, forKey: "description")
         
-        CloudKitHelper.privateDB.save(record) { (newRecord, error) in
+        CloudKitManager.privateDB.save(record) { (newRecord, error) in
             if error != nil {
                 print(error!)
             } else {
-                print(newRecord!)
+                print(newRecord!.recordID)
             }
         }
     }

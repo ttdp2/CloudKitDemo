@@ -1,5 +1,5 @@
 //
-//  CoreDataHelper.swift
+//  CoreDataStack.swift
 //  CloudKitDemo
 //
 //  Created by Tian Tong on 2020/6/18.
@@ -8,9 +8,9 @@
 
 import CoreData
 
-class CoreDataHelper {
+class CoreDataStack {
     
-    static let shared = CoreDataHelper()
+    static let shared = CoreDataStack()
     
     // MARK: - Core Data stack
 

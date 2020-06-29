@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AC25045924A96A56008052A4 /* CKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC25045824A96A56008052A4 /* CKConstants.swift */; };
+		AC25045924A96A56008052A4 /* CKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC25045824A96A56008052A4 /* CKConstant.swift */; };
+		AC2D545124A9C6C600F8143E /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2D545024A9C6C600F8143E /* Idea.swift */; };
 		AC33F697249B2EC800C5655B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F696249B2EC800C5655B /* AppDelegate.swift */; };
 		AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F698249B2EC800C5655B /* SceneDelegate.swift */; };
 		AC33F6A1249B2EC800C5655B /* CloudKitDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AC33F69F249B2EC800C5655B /* CloudKitDemo.xcdatamodeld */; };
@@ -20,12 +21,13 @@
 		AC33F6C0249B385400C5655B /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6BF249B385400C5655B /* UIViewController+Extension.swift */; };
 		AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C1249B387900C5655B /* UITableView+Extension.swift */; };
 		AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C3249B38A000C5655B /* Date+Extension.swift */; };
-		AC33F6C7249B395D00C5655B /* CloudKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C6249B395D00C5655B /* CloudKitHelper.swift */; };
-		AC33F6C9249B3BE100C5655B /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C8249B3BE100C5655B /* CoreDataHelper.swift */; };
+		AC33F6C7249B395D00C5655B /* CKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C6249B395D00C5655B /* CKManager.swift */; };
+		AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AC25045824A96A56008052A4 /* CKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKConstants.swift; sourceTree = "<group>"; };
+		AC25045824A96A56008052A4 /* CKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKConstant.swift; sourceTree = "<group>"; };
+		AC2D545024A9C6C600F8143E /* Idea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
 		AC33F693249B2EC800C5655B /* CloudKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CloudKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC33F696249B2EC800C5655B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AC33F698249B2EC800C5655B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,8 +43,8 @@
 		AC33F6BF249B385400C5655B /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		AC33F6C1249B387900C5655B /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		AC33F6C3249B38A000C5655B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
-		AC33F6C6249B395D00C5655B /* CloudKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitHelper.swift; sourceTree = "<group>"; };
-		AC33F6C8249B3BE100C5655B /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		AC33F6C6249B395D00C5655B /* CKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKManager.swift; sourceTree = "<group>"; };
+		AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC2D544F24A9C6B100F8143E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AC2D545024A9C6C600F8143E /* Idea.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		AC33F68A249B2EC800C5655B = {
 			isa = PBXGroup;
 			children = (
@@ -80,7 +90,8 @@
 				AC33F696249B2EC800C5655B /* AppDelegate.swift */,
 				AC33F698249B2EC800C5655B /* SceneDelegate.swift */,
 				AC33F6B4249B33E500C5655B /* Views */,
-				AC33F6C5249B394600C5655B /* Core Data */,
+				AC2D544F24A9C6B100F8143E /* Models */,
+				AC33F6C5249B394600C5655B /* CloudKit */,
 				AC33F6BC249B380300C5655B /* Extensions */,
 				AC33F6B1249B2FBC00C5655B /* Supporting Files */,
 			);
@@ -98,6 +109,7 @@
 		AC33F6B1249B2FBC00C5655B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */,
 				AC33F6AD249B2EE700C5655B /* CloudKitDemo.entitlements */,
 				AC33F69F249B2EC800C5655B /* CloudKitDemo.xcdatamodeld */,
 				AC33F6A4249B2ED200C5655B /* LaunchScreen.storyboard */,
@@ -127,14 +139,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		AC33F6C5249B394600C5655B /* Core Data */ = {
+		AC33F6C5249B394600C5655B /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
-				AC33F6C8249B3BE100C5655B /* CoreDataHelper.swift */,
-				AC33F6C6249B395D00C5655B /* CloudKitHelper.swift */,
-				AC25045824A96A56008052A4 /* CKConstants.swift */,
+				AC33F6C6249B395D00C5655B /* CKManager.swift */,
+				AC25045824A96A56008052A4 /* CKConstant.swift */,
 			);
-			path = "Core Data";
+			path = CloudKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,17 +218,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC2D545124A9C6C600F8143E /* Idea.swift in Sources */,
 				AC33F6BE249B382D00C5655B /* UIView+Extension.swift in Sources */,
 				AC33F6A1249B2EC800C5655B /* CloudKitDemo.xcdatamodeld in Sources */,
 				AC33F697249B2EC800C5655B /* AppDelegate.swift in Sources */,
-				AC25045924A96A56008052A4 /* CKConstants.swift in Sources */,
+				AC25045924A96A56008052A4 /* CKConstant.swift in Sources */,
 				AC33F6B8249B343400C5655B /* EditorViewController.swift in Sources */,
 				AC33F6C0249B385400C5655B /* UIViewController+Extension.swift in Sources */,
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
 				AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */,
-				AC33F6C9249B3BE100C5655B /* CoreDataHelper.swift in Sources */,
-				AC33F6C7249B395D00C5655B /* CloudKitHelper.swift in Sources */,
+				AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */,
+				AC33F6C7249B395D00C5655B /* CKManager.swift in Sources */,
 				AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

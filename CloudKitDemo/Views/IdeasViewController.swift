@@ -8,18 +8,13 @@
 
 import UIKit
 
-struct Idea {
-    let title: String
-    let date: String
-}
-
 class IdeasViewController: UIViewController {
     
     // MARK: - Property
     
-    var ideas = [Idea(title: "Go to Apple WWDC in 2021", date: Date().dateString),
-                 Idea(title: "Playing basketball in this weekend", date: Date().dateString),
-                 Idea(title: "Write a blog about CloudKit", date: Date().dateString)
+    var ideas = [Idea(title: "Go to Apple WWDC in 2021", description: Date().dateString),
+                 Idea(title: "Playing basketball in this weekend", description: Date().dateString),
+                 Idea(title: "Write a blog about CloudKit", description: Date().dateString)
     ]
     
     override func viewDidLoad() {
@@ -29,9 +24,6 @@ class IdeasViewController: UIViewController {
         navigationItem.rightBarButtonItem = addButton
         
         setupViews()
-        
-        let context = CoreDataHelper.shared.persistentContainer.viewContext
-        print(context)
     }
     
     // MARK: - View
@@ -73,11 +65,11 @@ class IdeasViewController: UIViewController {
 extension IdeasViewController: EditorViewDelegate {
     
     func editorView(didAddIdea text: String) {
-        let idea = Idea(title: text, date: Date().dateString)
+        let idea = Idea(title: text, description: Date().dateString)
         ideas.append(idea)
         tableView.reloadData()
         
-        CloudKitHelper.shared.save(idea: idea)
+        CloudKitManager.shared.save(idea: idea)
     }
     
     func editorView(didChangeIdea text: String, orignal: String) {
@@ -85,7 +77,7 @@ extension IdeasViewController: EditorViewDelegate {
             return
         }
         
-        ideas[index] = Idea(title: text, date: Date().dateString)
+        ideas[index] = Idea(title: text, description: Date().dateString)
         tableView.reloadData()
     }
     
@@ -101,7 +93,7 @@ extension IdeasViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as IdeaTableViewCell
         
         cell.textLabel?.text = ideas[indexPath.row].title
-        cell.detailTextLabel?.text = ideas[indexPath.row].date
+        cell.detailTextLabel?.text = ideas[indexPath.row].description
         return cell
     }
     
