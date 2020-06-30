@@ -12,9 +12,9 @@ class IdeasViewController: UIViewController {
     
     // MARK: - Property
     
-    var ideas = [Idea(title: "Go to Apple WWDC in 2021", description: Date().dateString),
-                 Idea(title: "Playing basketball in this weekend", description: Date().dateString),
-                 Idea(title: "Write a blog about CloudKit", description: Date().dateString)
+    var ideas = [Idea(title: "Go to Apple WWDC in 2021"),
+                 Idea(title: "Playing basketball in this weekend"),
+                 Idea(title: "Write a blog about CloudKit")
     ]
     
     override func viewDidLoad() {
@@ -67,7 +67,7 @@ class IdeasViewController: UIViewController {
 extension IdeasViewController: EditorViewDelegate {
     
     func editorView(didAddIdea text: String) {
-        let idea = Idea(title: text, description: Date().dateString)
+        let idea = Idea(title: text)
         ideas.append(idea)
         tableView.reloadData()
         
@@ -79,7 +79,7 @@ extension IdeasViewController: EditorViewDelegate {
             return
         }
         
-        ideas[index] = Idea(title: text, description: Date().dateString)
+        ideas[index] = Idea(title: text)
         tableView.reloadData()
     }
     
@@ -95,7 +95,7 @@ extension IdeasViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as IdeaTableViewCell
         
         cell.textLabel?.text = ideas[indexPath.row].title
-        cell.detailTextLabel?.text = ideas[indexPath.row].description
+        cell.detailTextLabel?.text = "\(ideas[indexPath.row].updatedAt)"
         return cell
     }
     

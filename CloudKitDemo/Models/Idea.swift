@@ -8,7 +8,26 @@
 
 import Foundation
 
-struct Idea {
+protocol Record {
+    var uuid: String { get }
+    var createdAt: Date { get }
+    var updatedAt: Date { get set }
+}
+
+struct Idea: Record {
+    let uuid: String
+    let createdAt: Date
+    var updatedAt: Date
+    
     let title: String
-    let description: String
+}
+
+extension Idea {
+    init(title: String) {
+        self.uuid = UUID().uuidString
+        self.createdAt = Date()
+        self.updatedAt = Date()
+        
+        self.title = title
+    }
 }

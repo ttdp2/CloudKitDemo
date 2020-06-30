@@ -10,7 +10,7 @@ import Foundation
 
 extension Date {
     
-    var dateString: String {
+    var localString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short

@@ -1,5 +1,5 @@
 //
-//  CloudKitHelper.swift
+//  CloudKitManager.swift
 //  CloudKitDemo
 //
 //  Created by Tian Tong on 2020/6/18.
@@ -19,7 +19,6 @@ class CloudKitManager {
     func save(idea: Idea) {
         let record = CKRecord(recordType: CKConstant.Record.Ideas)
         record.setValue(idea.title, forKey: CKConstant.Field.Title)
-        record.setValue(idea.description, forKey: CKConstant.Field.Description)
         
         CloudKitManager.privateDB.save(record) { (newRecord, error) in
             if error != nil {
