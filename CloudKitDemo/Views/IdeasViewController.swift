@@ -12,10 +12,7 @@ class IdeasViewController: UIViewController {
     
     // MARK: - Property
     
-    var ideas = [Idea(title: "Go to Apple WWDC in 2021"),
-                 Idea(title: "Playing basketball in this weekend"),
-                 Idea(title: "Write a blog about CloudKit")
-    ]
+    var ideas: [Idea] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +22,10 @@ class IdeasViewController: UIViewController {
         
         setupViews()
         
-        CloudKitManager.shared.query {}
+        CloudKitOperation<Idea>.query(type: CKConstant.RecordType.Ideas) { ideas in
+            self.ideas = ideas
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - View
@@ -54,7 +54,7 @@ class IdeasViewController: UIViewController {
     
     // MARK: - Method
     
-    func showEdit(idea: String? = nil) {
+    func showEdit(idea: Idea? = nil) {
         let editViewController = EditorViewController()
         editViewController.delegate = self
         editViewController.idea = idea
@@ -66,21 +66,28 @@ class IdeasViewController: UIViewController {
 
 extension IdeasViewController: EditorViewDelegate {
     
-    func editorView(didAddIdea text: String) {
-        let idea = Idea(title: text)
+    func editorView(didAdd idea: Idea) {
         ideas.append(idea)
         tableView.reloadData()
         
-        CloudKitManager.shared.save(idea: idea)
+        CloudKitOperation<Idea>.save(model: idea) { savedIdea in
+            self.ideas[self.ideas.count - 1] = savedIdea
+            self.tableView.reloadData()
+        }
     }
     
-    func editorView(didChangeIdea text: String, orignal: String) {
-        guard let index = ideas.map({ $0.title }).firstIndex(of: orignal) else {
+    func editorView(didChange idea: Idea) {
+        guard let index = ideas.map({ $0.uuid }).firstIndex(of: idea.uuid) else {
             return
         }
         
-        ideas[index] = Idea(title: text)
+        ideas[index] = idea
         tableView.reloadData()
+        
+        CloudKitOperation<Idea>.update(model: idea) { updatedIdea in
+            self.ideas[index] = updatedIdea
+            self.tableView.reloadData()
+        }
     }
     
 }
@@ -99,13 +106,22 @@ extension IdeasViewController: UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let idea = ideas.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            CloudKitOperation.delete(model: idea) { _ in }
+        }
+    }
+    
 }
 
 extension IdeasViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let idea = ideas[indexPath.row]
-        showEdit(idea: idea.title)
+        showEdit(idea: idea)
     }
     
 }

@@ -10,13 +10,13 @@ import UIKit
 import CloudKit
 
 protocol EditorViewDelegate {
-    func editorView(didAddIdea text: String)
-    func editorView(didChangeIdea text: String, orignal: String)
+    func editorView(didAdd idea: Idea)
+    func editorView(didChange idea: Idea)
 }
 
 class EditorViewController: UIViewController {
     
-    var idea: String?
+    var idea: Idea?
     
     var delegate: EditorViewDelegate?
 
@@ -26,7 +26,7 @@ class EditorViewController: UIViewController {
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(handleSave))
         navigationItem.rightBarButtonItem = saveButton
         
-        ideaView.text = idea
+        ideaView.text = idea?.title
         saveButton.isEnabled = !ideaView.text.isEmpty
         
         setupViews()
@@ -77,14 +77,15 @@ class EditorViewController: UIViewController {
     // MARK: - Action
     
     @objc func handleSave() {
-        guard let text = ideaView.text else {
+        guard let title = ideaView.text else {
             return
         }
         
         if let idea = idea {
-            delegate?.editorView(didChangeIdea: text, orignal: idea)
+            let _idea = Idea(uuid: idea.uuid, createdAt: idea.createdAt, updatedAt: Date(), title: title)
+            delegate?.editorView(didChange: _idea)
         } else {
-            delegate?.editorView(didAddIdea: text)
+            delegate?.editorView(didAdd: Idea(title: title))
         }
         
         navigationController?.popViewController(animated: true)

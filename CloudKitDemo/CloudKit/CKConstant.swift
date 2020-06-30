@@ -10,7 +10,7 @@ import Foundation
 
 struct CKConstant {
     
-    struct Record {
+    struct RecordType {
         static let Ideas = "Ideas"
     }
     
