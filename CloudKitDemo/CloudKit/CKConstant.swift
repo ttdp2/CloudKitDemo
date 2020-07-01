@@ -12,11 +12,14 @@ struct CKConstant {
     
     struct RecordType {
         static let Ideas = "Ideas"
+        static let Notes = "Notes"
+        static let Photos = "Photos"
     }
     
     struct Field {
         static let Title = "title"
-        static let Description = "description"
+        static let Text = "Text"
+        static let Data = "Data"
     }
     
     struct Sort {

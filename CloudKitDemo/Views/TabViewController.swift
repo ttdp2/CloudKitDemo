@@ -22,17 +22,21 @@ class TabViewController: UITabBarController {
         view.backgroundColor = .white
         
         let ideasVC = IdeasViewController()
-        ideasVC.title = "Ideas"
+        ideasVC.title = "Ideas CRUD"
         let ideasNav = UINavigationController(rootViewController: ideasVC)
-        ideasNav.tabBarItem = UITabBarItem(title: "CRUD", image: .checkmark, tag: 0)
+        ideasNav.tabBarItem = UITabBarItem(title: "Basic", image: .checkmark, tag: 0)
         
+        let ideasPlusVC = NotesViewController()
+        ideasPlusVC.title = "Notes CRUD"
+        let ideasPlusNav = UINavigationController(rootViewController: ideasPlusVC)
+        ideasPlusNav.tabBarItem = UITabBarItem(title: "Advanced", image: .checkmark, tag: 1)
         
         let photosVC = PhotosViewController()
-        photosVC.title = "Photos"
+        photosVC.title = "Photo Sharing"
         let photosNav = UINavigationController(rootViewController: photosVC)
-        photosNav.tabBarItem = UITabBarItem(title: "Share", image: .checkmark, tag: 1)
+        photosNav.tabBarItem = UITabBarItem(title: "Share", image: .checkmark, tag: 2)
         
-        viewControllers = [ideasNav, photosNav]
+        viewControllers = [ideasNav, ideasPlusNav, photosNav]
     }
     
 }
