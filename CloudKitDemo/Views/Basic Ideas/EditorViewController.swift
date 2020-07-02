@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CloudKit
 
 protocol EditorViewDelegate {
     func editorView(didAdd idea: Idea)

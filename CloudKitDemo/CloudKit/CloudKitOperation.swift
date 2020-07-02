@@ -52,8 +52,8 @@ class CloudKitOperation<T: Record> {
         CloudKitManager.privateDB.add(operation)
     }
     
-    static func update(model: T, completion: @escaping (T) -> Void) {
-        let recordID = CKRecord.ID(recordName: model.uuid)
+    static func update(model: T, zone: CKRecordZone = CloudKitManager.defaultZone, completion: @escaping (T) -> Void) {
+        let recordID = CKRecord.ID(recordName: model.uuid, zoneID: zone.zoneID)
         
         CloudKitManager.privateDB.fetch(withRecordID: recordID) { fetchedRecord, error in
             guard let cloudRecord = fetchedRecord else { return }
@@ -76,8 +76,8 @@ class CloudKitOperation<T: Record> {
         }
     }
     
-    static func delete(model: T, completion: @escaping (Bool) -> Void) {
-        let recordID = CKRecord.ID(recordName: model.uuid)
+    static func delete(model: T, zone: CKRecordZone = CloudKitManager.defaultZone, completion: @escaping (Bool) -> Void) {
+        let recordID = CKRecord.ID(recordName: model.uuid, zoneID: zone.zoneID)
         
         CloudKitManager.privateDB.delete(withRecordID: recordID) { id, error in
             if error != nil {

@@ -12,12 +12,20 @@ class CategoriesViewController: UIViewController {
     
     // MARK: - Property
     
-    var categories: [Category] = [Category(name: "Work"), Category(name: "Travel"), Category(name: "Home"), Category(name: "Fitness")]
+    var categories: [Category] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
+        navigationItem.rightBarButtonItem = addButton
+
         setupViews()
+        
+        CloudKitOperation<Category>.query(type: CKConstant.RecordType.Categories) { categories in
+            self.categories = categories
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - View
@@ -36,6 +44,50 @@ class CategoriesViewController: UIViewController {
         view.addSubview(tableView)
         view.addConstraints(format: "H:|[v0]|", views: tableView)
         view.addConstraints(format: "V:|[v0]|", views: tableView)
+    }
+    
+    // MARK: - Action
+       
+    @objc func handleAdd() {
+        showEditor()
+    }
+    
+    // MARK: - Method
+    
+    func showEditor(category: Category? = nil) {
+        let editViewController = CategoryEditorViewController()
+        editViewController.delegate = self
+        editViewController.category = category
+        
+        navigationController?.pushViewController(editViewController, animated: true)
+    }
+    
+}
+
+extension CategoriesViewController: CategoryEditorViewDelegate {
+    
+    func editorView(didAdd category: Category) {
+        categories.append(category)
+        tableView.reloadData()
+        
+        CloudKitOperation.save(model: category) { savedCategory in
+            self.categories[self.categories.count - 1] = savedCategory
+            self.tableView.reloadData()
+        }
+    }
+    
+    func editorView(didChange category: Category) {
+        guard let index = categories.map({ $0.uuid }).firstIndex(of: category.uuid) else {
+            return
+        }
+        
+        categories[index] = category
+        tableView.reloadData()
+        
+        CloudKitOperation.update(model: category, zone: CloudKitManager.notesZone) { updatedCategory in
+            self.categories[index] = updatedCategory
+            self.tableView.reloadData()
+        }
     }
     
 }
@@ -57,6 +109,8 @@ extension CategoriesViewController: UITableViewDataSource {
         if editingStyle == .delete {
             let category = categories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            CloudKitOperation.delete(model: category, zone: CloudKitManager.notesZone) { _ in }
         }
     }
     
@@ -65,8 +119,13 @@ extension CategoriesViewController: UITableViewDataSource {
 extension CategoriesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let categoryEditorVC = CategoryEditorViewController()
-        navigationController?.pushViewController(categoryEditorVC, animated: true)
+        let category = categories[indexPath.row]
+        showEditor(category: category)
+    }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let category = categories[indexPath.row]
+        showEditor(category: category)
     }
     
 }

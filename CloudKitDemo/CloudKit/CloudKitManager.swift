@@ -12,6 +12,7 @@ class CloudKitManager {
 
     static let privateDB = CKContainer.default().privateCloudDatabase
     static let notesZone = CKRecordZone(zoneName: CKConstant.Zone.Notes)
+    static let defaultZone = CKRecordZone(zoneName: CKConstant.Zone.Default)
     
     static var isNotesZoneReady: Bool {
         return UserDefaults.standard.bool(forKey: CKConstant.isNotesZoneReady)

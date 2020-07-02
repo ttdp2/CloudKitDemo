@@ -13,6 +13,7 @@ struct CKConstant {
     static let isNotesZoneReady = "isNotesZoneReady"
     
     struct Zone {
+        static let Default = "_defaultZone"
         static let Notes = "Notes Zone"
     }
     

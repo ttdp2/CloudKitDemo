@@ -70,7 +70,7 @@ extension IdeasViewController: EditorViewDelegate {
         ideas.append(idea)
         tableView.reloadData()
         
-        CloudKitOperation<Idea>.save(model: idea) { savedIdea in
+        CloudKitOperation.save(model: idea) { savedIdea in
             self.ideas[self.ideas.count - 1] = savedIdea
             self.tableView.reloadData()
         }
@@ -84,7 +84,7 @@ extension IdeasViewController: EditorViewDelegate {
         ideas[index] = idea
         tableView.reloadData()
         
-        CloudKitOperation<Idea>.update(model: idea) { updatedIdea in
+        CloudKitOperation.update(model: idea) { updatedIdea in
             self.ideas[index] = updatedIdea
             self.tableView.reloadData()
         }
