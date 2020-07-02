@@ -17,6 +17,7 @@ protocol Record {
     init(record: CKRecord)
     func convertToCKRecord() -> CKRecord
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord
+    func getRecordID() -> CKRecord.ID
 }
 
 struct Idea: Record {
@@ -54,6 +55,11 @@ extension Idea {
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(title, forKey: CKConstant.Field.title)
         return record
+    }
+    
+    func getRecordID() -> CKRecord.ID {
+        let recordID = CKRecord.ID(recordName: uuid)
+        return recordID
     }
     
 }

@@ -16,7 +16,6 @@ struct Photo: Record {
     let updatedAt: Date
     
     let data: Data
-
 }
 
 extension Photo {
@@ -47,6 +46,11 @@ extension Photo {
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(data, forKey: CKConstant.Field.data)
         return record
+    }
+    
+    func getRecordID() -> CKRecord.ID {
+        let recordID = CKRecord.ID(recordName: uuid)
+        return recordID
     }
     
 }

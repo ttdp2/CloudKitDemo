@@ -84,7 +84,7 @@ extension CategoriesViewController: CategoryEditorViewDelegate {
         categories[index] = category
         tableView.reloadData()
         
-        CloudKitOperation.update(model: category, zone: CloudKitManager.notesZone) { updatedCategory in
+        CloudKitOperation.update(model: category) { updatedCategory in
             self.categories[index] = updatedCategory
             self.tableView.reloadData()
         }
@@ -110,7 +110,7 @@ extension CategoriesViewController: UITableViewDataSource {
             let category = categories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
-            CloudKitOperation.delete(model: category, zone: CloudKitManager.notesZone) { _ in }
+            CloudKitOperation.delete(model: category) { _ in }
         }
     }
     
