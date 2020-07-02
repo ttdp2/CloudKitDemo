@@ -9,17 +9,6 @@
 import Foundation
 import CloudKit
 
-protocol Record {
-    var uuid: String { get }
-    var createdAt: Date { get }
-    var updatedAt: Date { get }
-    
-    init(record: CKRecord)
-    func convertToCKRecord() -> CKRecord
-    func mergeWithCKRecord(_ record: CKRecord) -> CKRecord
-    func getRecordID() -> CKRecord.ID
-}
-
 struct Idea: Record {
     let uuid: String
     let createdAt: Date
@@ -45,9 +34,13 @@ extension Idea {
         self.title = record.object(forKey: CKConstant.Field.title) as! String
     }
     
-    func convertToCKRecord() -> CKRecord {
+    func getRecordID() -> CKRecord.ID {
         let recordID = CKRecord.ID(recordName: uuid)
-        let record = CKRecord(recordType: CKConstant.RecordType.Ideas, recordID: recordID)
+        return recordID
+    }
+    
+    func convertToCKRecord() -> CKRecord {
+        let record = CKRecord(recordType: CKConstant.RecordType.Ideas, recordID: getRecordID())
         record.setValue(title, forKey: CKConstant.Field.title)
         return record
     }
@@ -55,11 +48,6 @@ extension Idea {
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(title, forKey: CKConstant.Field.title)
         return record
-    }
-    
-    func getRecordID() -> CKRecord.ID {
-        let recordID = CKRecord.ID(recordName: uuid)
-        return recordID
     }
     
 }

@@ -34,6 +34,12 @@ extension Note {
         self.text = record.object(forKey: CKConstant.Field.text) as! String
     }
     
+    func getRecordID() -> CKRecord.ID {
+        let zoneID = CloudKitManager.notesZone.zoneID
+        let recordID = CKRecord.ID(recordName: uuid, zoneID: zoneID)
+        return recordID
+    }
+    
     func convertToCKRecord() -> CKRecord {
         let record = CKRecord(recordType: CKConstant.RecordType.Notes, recordID: getRecordID())
         record.setValue(text, forKey: CKConstant.Field.text)
@@ -43,12 +49,6 @@ extension Note {
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(text, forKey: CKConstant.Field.text)
         return record
-    }
-    
-    func getRecordID() -> CKRecord.ID {
-        let zoneID = CloudKitManager.notesZone.zoneID
-        let recordID = CKRecord.ID(recordName: uuid, zoneID: zoneID)
-        return recordID
     }
     
 }

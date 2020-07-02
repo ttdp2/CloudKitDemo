@@ -11,10 +11,12 @@ import Foundation
 struct CKConstant {
     
     static let isNotesZoneReady = "isNotesZoneReady"
+    static let isPhotosZoneReady = "isPhotosZoneReady"
     
     struct Zone {
-        static let Default = "_defaultZone"
         static let Notes = "Notes Zone"
+        static let Photos = "Photos Zone"
+        static let Default = "_defaultZone"
     }
     
     struct RecordType {

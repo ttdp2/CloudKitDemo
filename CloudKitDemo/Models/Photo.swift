@@ -36,9 +36,13 @@ extension Photo {
         self.data = record.value(forKey: CKConstant.Field.data) as! Data
     }
     
-    func convertToCKRecord() -> CKRecord {
+    func getRecordID() -> CKRecord.ID {
         let recordID = CKRecord.ID(recordName: uuid)
-        let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
+        return recordID
+    }
+    
+    func convertToCKRecord() -> CKRecord {
+        let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: getRecordID())
         record.setValue(data, forKey: CKConstant.Field.data)
         return record
     }
@@ -46,11 +50,6 @@ extension Photo {
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(data, forKey: CKConstant.Field.data)
         return record
-    }
-    
-    func getRecordID() -> CKRecord.ID {
-        let recordID = CKRecord.ID(recordName: uuid)
-        return recordID
     }
     
 }
