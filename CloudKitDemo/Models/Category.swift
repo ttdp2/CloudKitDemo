@@ -1,51 +1,49 @@
 //
-//  Photo.swift
+//  Category.swift
 //  CloudKitDemo
 //
-//  Created by Tian Tong on 2020/7/1.
+//  Created by Tian Tong on 2020/7/2.
 //  Copyright © 2020 TTDP. All rights reserved.
 //
 
 import Foundation
 import CloudKit
 
-struct Photo: Record {
-    
+struct Category: Record {
     let uuid: String
     let createdAt: Date
     let updatedAt: Date
     
-    let data: Data
-
+    let name: String
 }
 
-extension Photo {
+extension Category {
     
-    init(data: Data) {
+    init(name: String) {
         self.uuid = UUID().uuidString
         self.createdAt = Date()
         self.updatedAt = Date()
         
-        self.data = data
+        self.name = name
     }
     
     init(record: CKRecord) {
         self.uuid = record.recordID.recordName
         self.createdAt = record.creationDate!
         self.updatedAt = record.modificationDate!
-        
-        self.data = record.value(forKey: CKConstant.Field.data) as! Data
+        self.name = record.object(forKey: CKConstant.Field.name) as! String
     }
     
     func convertToCKRecord() -> CKRecord {
-        let recordID = CKRecord.ID(recordName: uuid)
-        let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
-        record.setValue(data, forKey: CKConstant.Field.data)
+        let zoneID = CloudKitManager.notesZone.zoneID
+        let recordID = CKRecord.ID(recordName: uuid, zoneID: zoneID)
+        let record = CKRecord(recordType: CKConstant.RecordType.Categories, recordID: recordID)
+        record.setValue(name, forKey: CKConstant.Field.name)
         return record
     }
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
-        record.setValue(data, forKey: CKConstant.Field.data)
+        record.setValue(name, forKey: CKConstant.Field.name)
         return record
     }
     

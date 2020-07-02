@@ -28,6 +28,12 @@
 		AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C3249B38A000C5655B /* Date+Extension.swift */; };
 		AC33F6C7249B395D00C5655B /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C6249B395D00C5655B /* CloudKitManager.swift */; };
 		AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */; };
+		AC41179624AD607A00501A5D /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179524AD607A00501A5D /* NoteDetailViewController.swift */; };
+		AC41179824AD60FD00501A5D /* NoteEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */; };
+		AC41179A24AD62C700501A5D /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179924AD62C700501A5D /* CategoriesViewController.swift */; };
+		AC41179C24AD62DE00501A5D /* CategoryEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */; };
+		AC41179E24AD62FD00501A5D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179D24AD62FD00501A5D /* Category.swift */; };
+		AC4117A024AD630600501A5D /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179F24AD630600501A5D /* Note.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +61,12 @@
 		AC33F6C3249B38A000C5655B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		AC33F6C6249B395D00C5655B /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		AC41179524AD607A00501A5D /* NoteDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailViewController.swift; sourceTree = "<group>"; };
+		AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorViewController.swift; sourceTree = "<group>"; };
+		AC41179924AD62C700501A5D /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
+		AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorViewController.swift; sourceTree = "<group>"; };
+		AC41179D24AD62FD00501A5D /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		AC41179F24AD630600501A5D /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				AC2D545024A9C6C600F8143E /* Idea.swift */,
+				AC41179F24AD630600501A5D /* Note.swift */,
+				AC41179D24AD62FD00501A5D /* Category.swift */,
 				AC1D6F5124AC51D000D40424 /* Photo.swift */,
 			);
 			path = Models;
@@ -134,10 +148,9 @@
 			isa = PBXGroup;
 			children = (
 				AC1D6F4D24AC06C400D40424 /* TabViewController.swift */,
-				AC33F6B5249B340B00C5655B /* IdeasViewController.swift */,
-				AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */,
-				AC33F6B7249B343400C5655B /* EditorViewController.swift */,
-				AC1D6F4F24AC073E00D40424 /* PhotosViewController.swift */,
+				AC41179224AD5FA400501A5D /* Basic Ideas */,
+				AC41179324AD5FB900501A5D /* Advanced Notes */,
+				AC41179424AD5FDB00501A5D /* Photo Sharing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -161,6 +174,35 @@
 				AC25045824A96A56008052A4 /* CKConstant.swift */,
 			);
 			path = CloudKit;
+			sourceTree = "<group>";
+		};
+		AC41179224AD5FA400501A5D /* Basic Ideas */ = {
+			isa = PBXGroup;
+			children = (
+				AC33F6B5249B340B00C5655B /* IdeasViewController.swift */,
+				AC33F6B7249B343400C5655B /* EditorViewController.swift */,
+			);
+			path = "Basic Ideas";
+			sourceTree = "<group>";
+		};
+		AC41179324AD5FB900501A5D /* Advanced Notes */ = {
+			isa = PBXGroup;
+			children = (
+				AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */,
+				AC41179524AD607A00501A5D /* NoteDetailViewController.swift */,
+				AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */,
+				AC41179924AD62C700501A5D /* CategoriesViewController.swift */,
+				AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */,
+			);
+			path = "Advanced Notes";
+			sourceTree = "<group>";
+		};
+		AC41179424AD5FDB00501A5D /* Photo Sharing */ = {
+			isa = PBXGroup;
+			children = (
+				AC1D6F4F24AC073E00D40424 /* PhotosViewController.swift */,
+			);
+			path = "Photo Sharing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,8 +276,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC2D545124A9C6C600F8143E /* Idea.swift in Sources */,
+				AC41179824AD60FD00501A5D /* NoteEditorViewController.swift in Sources */,
+				AC41179624AD607A00501A5D /* NoteDetailViewController.swift in Sources */,
 				AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */,
 				AC1D6F5024AC073E00D40424 /* PhotosViewController.swift in Sources */,
+				AC41179A24AD62C700501A5D /* CategoriesViewController.swift in Sources */,
 				AC33F6BE249B382D00C5655B /* UIView+Extension.swift in Sources */,
 				AC33F6A1249B2EC800C5655B /* CloudKitDemo.xcdatamodeld in Sources */,
 				AC1D6F4E24AC06C400D40424 /* TabViewController.swift in Sources */,
@@ -244,11 +289,14 @@
 				AC33F6B8249B343400C5655B /* EditorViewController.swift in Sources */,
 				AC29191B24AAB11B00C9BA38 /* CloudKitOperation.swift in Sources */,
 				AC33F6C0249B385400C5655B /* UIViewController+Extension.swift in Sources */,
+				AC41179E24AD62FD00501A5D /* Category.swift in Sources */,
 				AC1D6F5224AC51D000D40424 /* Photo.swift in Sources */,
+				AC4117A024AD630600501A5D /* Note.swift in Sources */,
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
 				AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */,
 				AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */,
+				AC41179C24AD62DE00501A5D /* CategoryEditorViewController.swift in Sources */,
 				AC33F6C7249B395D00C5655B /* CloudKitManager.swift in Sources */,
 				AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */,
 			);

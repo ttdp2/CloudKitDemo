@@ -22,12 +22,12 @@ class TabViewController: UITabBarController {
         view.backgroundColor = .white
         
         let ideasVC = IdeasViewController()
-        ideasVC.title = "Ideas CRUD"
+        ideasVC.title = "Ideas"
         let ideasNav = UINavigationController(rootViewController: ideasVC)
         ideasNav.tabBarItem = UITabBarItem(title: "Basic", image: .checkmark, tag: 0)
         
         let ideasPlusVC = NotesViewController()
-        ideasPlusVC.title = "Notes CRUD"
+        ideasPlusVC.title = "Notes"
         let ideasPlusNav = UINavigationController(rootViewController: ideasPlusVC)
         ideasPlusNav.tabBarItem = UITabBarItem(title: "Advanced", image: .checkmark, tag: 1)
         

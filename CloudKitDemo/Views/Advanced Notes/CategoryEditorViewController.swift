@@ -1,14 +1,14 @@
 //
-//  NotesViewController.swift
+//  CategoryEditorViewController.swift
 //  CloudKitDemo
 //
-//  Created by Tian Tong on 2020/7/1.
+//  Created by Tian Tong on 2020/7/2.
 //  Copyright © 2020 TTDP. All rights reserved.
 //
 
 import UIKit
 
-class NotesViewController: UIViewController {
+class CategoryEditorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

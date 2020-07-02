@@ -30,7 +30,7 @@ class CloudKitOperation<T: Record> {
     static func query(type: String, completion: @escaping ([T]) -> Void) {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: type, predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: CKConstant.Sort.CreationDate, ascending: true)]
+        query.sortDescriptors = [NSSortDescriptor(key: CKConstant.Sort.creationDate, ascending: true)]
         
         let operation = CKQueryOperation(query: query)
         

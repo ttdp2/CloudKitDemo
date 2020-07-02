@@ -11,5 +11,22 @@ import CloudKit
 class CloudKitManager {
 
     static let privateDB = CKContainer.default().privateCloudDatabase
+    static let notesZone = CKRecordZone(zoneName: CKConstant.Zone.Notes)
+    
+    static var isNotesZoneReady: Bool {
+        return UserDefaults.standard.bool(forKey: CKConstant.isNotesZoneReady)
+    }
+    
+    class func setUpNotesZone() {
+        let zoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [notesZone], recordZoneIDsToDelete: nil)
+        zoneOperation.modifyRecordZonesCompletionBlock = { _, _, error in
+            if let error = error {
+                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription) #CloudKitOperation")
+            } else {
+                UserDefaults.standard.set(true, forKey: CKConstant.isNotesZoneReady)
+            }
+        }
+        CloudKitManager.privateDB.add(zoneOperation)
+    }
     
 }

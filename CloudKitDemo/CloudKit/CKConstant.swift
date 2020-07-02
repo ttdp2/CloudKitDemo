@@ -10,21 +10,29 @@ import Foundation
 
 struct CKConstant {
     
+    static let isNotesZoneReady = "isNotesZoneReady"
+    
+    struct Zone {
+        static let Notes = "Notes Zone"
+    }
+    
     struct RecordType {
         static let Ideas = "Ideas"
         static let Notes = "Notes"
+        static let Categories = "Categories"
         static let Photos = "Photos"
     }
     
     struct Field {
-        static let Title = "title"
-        static let Text = "Text"
-        static let Data = "Data"
+        static let title = "title"
+        static let text = "text"
+        static let name = "name"
+        static let data = "data"
     }
     
     struct Sort {
-        static let CreationDate = "creationDate"
-        static let ModificationDate = "modificationDate"
+        static let creationDate = "creationDate"
+        static let modificationDate = "modificationDate"
     }
     
 }
