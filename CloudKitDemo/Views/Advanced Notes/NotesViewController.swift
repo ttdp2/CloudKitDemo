@@ -15,6 +15,46 @@ class NotesViewController: UIViewController {
     // MARK: - Property
     
     var notes: [Note] = []
+    var noteDic: [String?: [Note]] = [:]
+    
+    var categories: [Category] = []
+    var categoryNames: [String] = []
+    
+    var categoryNotes: [String: [Note]] = [:]
+    
+    var isCategoriesFetched = false {
+        didSet {
+            if isNotesFetched {
+                mergeDate()
+            }
+        }
+    }
+    var isNotesFetched = false {
+        didSet {
+            if isCategoriesFetched {
+                mergeDate()
+            }
+        }
+    }
+    
+    
+    var noteDicKeys: Array<Dictionary<String, Any>.Key> {
+        return Array(categoryNotes.keys)
+    }
+    
+    func mergeDate() {
+        let categoryDic = Dictionary(grouping: categories, by: { $0.uuid })
+        
+        for (key, value) in noteDic {
+            if let uuid = key {
+                categoryNotes[categoryDic[uuid]!.first!.name] = value
+            } else {
+                categoryNotes["NO Names"] = value
+            }
+        }
+        
+        tableView.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,18 +68,25 @@ class NotesViewController: UIViewController {
         setupViews()
         
         CloudKitOperation<Note>.query(type: CKConstant.RecordType.Notes) { notes in
+            self.noteDic = Dictionary(grouping: notes, by: { $0.categoryId })
             self.notes = notes
             self.tableView.reloadData()
+            self.isNotesFetched = true
+        }
+        
+        CloudKitOperation<Category>.query(type: CKConstant.RecordType.Categories) { categories in
+            self.categories = categories
+            self.isCategoriesFetched = true
         }
     }
     
     // MARK: - View
     
     lazy var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.registerCell(IdeaTableViewCell.self)
+        tableView.registerCell(NoteTableViewCell.self)
         return tableView
     }()
     
@@ -104,15 +151,21 @@ extension NotesViewController: NoteEditorViewDelegate {
 
 extension NotesViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return noteDicKeys.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        let key = noteDicKeys[section]
+        return categoryNotes[key]?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as IdeaTableViewCell
+        let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteTableViewCell
         
-        cell.textLabel?.text = notes[indexPath.row].text
-        cell.detailTextLabel?.text = "\(notes[indexPath.row].updatedAt)"
+        let key = noteDicKeys[indexPath.section]
+        let notes = categoryNotes[key]
+        cell.textLabel?.text = notes?[indexPath.row].text
         return cell
     }
     
@@ -125,6 +178,11 @@ extension NotesViewController: UITableViewDataSource {
         }
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let key = noteDicKeys[section]
+        return key
+    }
+    
 }
 
 extension NotesViewController: UITableViewDelegate {
@@ -132,6 +190,22 @@ extension NotesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let note = notes[indexPath.row]
         showEditor(note: note)
+    }
+    
+}
+
+class NoteTableViewCell: UITableViewCell {
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        
+        self.textLabel?.numberOfLines = 0
+        self.selectionStyle = .none
+        self.accessoryType = .disclosureIndicator
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }
