@@ -30,7 +30,7 @@ class CloudKitManager {
         
         zoneOperation.modifyRecordZonesCompletionBlock = { _, _, error in
             if let error = error {
-                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription) #CloudKitOperation")
+                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription)")
             } else {
                 UserDefaults.standard.set(true, forKey: CKConstant.isNotesZoneReady)
             }
@@ -44,7 +44,7 @@ class CloudKitManager {
         
         zoneOperation.modifyRecordZonesCompletionBlock = { _, _, error in
             if let error = error {
-                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription) #CloudKitOperation")
+                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription)")
             } else {
                 UserDefaults.standard.set(true, forKey: CKConstant.isPhotosZoneReady)
             }

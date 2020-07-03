@@ -49,12 +49,12 @@ class IdeasViewController: UIViewController {
     // MARK: - Action
     
     @objc func handleAdd() {
-        showEdit()
+        showEditor()
     }
     
     // MARK: - Method
     
-    func showEdit(idea: Idea? = nil) {
+    func showEditor(idea: Idea? = nil) {
         let editViewController = EditorViewController()
         editViewController.delegate = self
         editViewController.idea = idea
@@ -121,7 +121,7 @@ extension IdeasViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let idea = ideas[indexPath.row]
-        showEdit(idea: idea)
+        showEditor(idea: idea)
     }
     
 }

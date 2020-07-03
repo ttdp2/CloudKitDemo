@@ -15,6 +15,7 @@ struct Note: Record {
     let updatedAt: Date
     
     let text: String
+    var categoryId: String?
 }
 
 extension Note {
@@ -32,6 +33,9 @@ extension Note {
         self.createdAt = record.creationDate!
         self.updatedAt = record.modificationDate!
         self.text = record.object(forKey: CKConstant.Field.text) as! String
+        if let reference = record.object(forKey: CKConstant.Field.category) as? CKRecord.Reference {
+            self.categoryId = reference.recordID.recordName
+        }
     }
     
     func getRecordID() -> CKRecord.ID {
@@ -43,12 +47,29 @@ extension Note {
     func convertToCKRecord() -> CKRecord {
         let record = CKRecord(recordType: CKConstant.RecordType.Notes, recordID: getRecordID())
         record.setValue(text, forKey: CKConstant.Field.text)
+        
+        if let categoryId = categoryId {
+            let reference = getCategoryReference(categoryId: categoryId)
+            record.setValue(reference, forKey: CKConstant.Field.category)
+        }
+        
         return record
     }
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(text, forKey: CKConstant.Field.text)
+        if let categoryId = categoryId {
+            let reference = getCategoryReference(categoryId: categoryId)
+            record.setValue(reference, forKey: CKConstant.Field.category)
+        }
         return record
+    }
+    
+    private func getCategoryReference(categoryId: String) -> CKRecord.Reference {
+        let zoneID = CloudKitManager.notesZone.zoneID
+        let categoryRecordID = CKRecord.ID(recordName: categoryId, zoneID: zoneID)
+        let categoryReference = CKRecord.Reference(recordID: categoryRecordID, action: .deleteSelf)
+        return categoryReference
     }
     
 }

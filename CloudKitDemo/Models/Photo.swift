@@ -37,7 +37,8 @@ extension Photo {
     }
     
     func getRecordID() -> CKRecord.ID {
-        let recordID = CKRecord.ID(recordName: uuid)
+        let zoneID = CloudKitManager.photosZone.zoneID
+        let recordID = CKRecord.ID(recordName: uuid, zoneID: zoneID)
         return recordID
     }
     

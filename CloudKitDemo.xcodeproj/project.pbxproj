@@ -28,7 +28,6 @@
 		AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C3249B38A000C5655B /* Date+Extension.swift */; };
 		AC33F6C7249B395D00C5655B /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C6249B395D00C5655B /* CloudKitManager.swift */; };
 		AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */; };
-		AC41179624AD607A00501A5D /* NoteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179524AD607A00501A5D /* NoteDetailViewController.swift */; };
 		AC41179824AD60FD00501A5D /* NoteEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */; };
 		AC41179A24AD62C700501A5D /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179924AD62C700501A5D /* CategoriesViewController.swift */; };
 		AC41179C24AD62DE00501A5D /* CategoryEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */; };
@@ -62,7 +61,6 @@
 		AC33F6C3249B38A000C5655B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		AC33F6C6249B395D00C5655B /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		AC33F6C8249B3BE100C5655B /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		AC41179524AD607A00501A5D /* NoteDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailViewController.swift; sourceTree = "<group>"; };
 		AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorViewController.swift; sourceTree = "<group>"; };
 		AC41179924AD62C700501A5D /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
 		AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorViewController.swift; sourceTree = "<group>"; };
@@ -192,7 +190,6 @@
 			isa = PBXGroup;
 			children = (
 				AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */,
-				AC41179524AD607A00501A5D /* NoteDetailViewController.swift */,
 				AC41179724AD60FD00501A5D /* NoteEditorViewController.swift */,
 				AC41179924AD62C700501A5D /* CategoriesViewController.swift */,
 				AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */,
@@ -280,7 +277,6 @@
 			files = (
 				AC2D545124A9C6C600F8143E /* Idea.swift in Sources */,
 				AC41179824AD60FD00501A5D /* NoteEditorViewController.swift in Sources */,
-				AC41179624AD607A00501A5D /* NoteDetailViewController.swift in Sources */,
 				AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */,
 				AC1D6F5024AC073E00D40424 /* PhotosViewController.swift in Sources */,
 				AC41179A24AD62C700501A5D /* CategoriesViewController.swift in Sources */,

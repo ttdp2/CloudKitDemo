@@ -31,6 +31,7 @@ struct CKConstant {
         static let text = "text"
         static let name = "name"
         static let data = "data"
+        static let category = "category"
     }
     
     struct Sort {
