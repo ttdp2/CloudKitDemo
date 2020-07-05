@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-struct Idea: Record {
+struct Idea {
     let uuid: String
     let createdAt: Date
     let updatedAt: Date
@@ -17,7 +17,7 @@ struct Idea: Record {
     let title: String
 }
 
-extension Idea {
+extension Idea: Record {
     
     init(title: String) {
         self.uuid = UUID().uuidString

@@ -9,7 +9,7 @@
 import Foundation
 import CloudKit
 
-struct Photo: Record {
+struct Photo {
     
     let uuid: String
     let createdAt: Date
@@ -18,7 +18,7 @@ struct Photo: Record {
     let data: Data
 }
 
-extension Photo {
+extension Photo: Record {
     
     init(data: Data) {
         self.uuid = UUID().uuidString
