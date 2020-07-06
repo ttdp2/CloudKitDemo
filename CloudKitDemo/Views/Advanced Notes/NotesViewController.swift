@@ -166,6 +166,7 @@ extension NotesViewController: UITableViewDataSource {
         let key = noteDicKeys[indexPath.section]
         let notes = categoryNotes[key]
         cell.textLabel?.text = notes?[indexPath.row].text
+        cell.imageView?.image = .checkmark
         return cell
     }
     

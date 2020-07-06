@@ -13,7 +13,7 @@ protocol NoteEditorViewDelegate {
     func editorView(didChange note: Note)
 }
 
-class NoteEditorViewController: UIViewController {
+class NoteEditorViewController: UIViewController, UINavigationControllerDelegate {
     
     // MARK: - Property
     
@@ -28,6 +28,8 @@ class NoteEditorViewController: UIViewController {
             }
         }
     }
+    
+    var noteImage: UIImage?
     
     var delegate: NoteEditorViewDelegate?
     
@@ -48,7 +50,7 @@ class NoteEditorViewController: UIViewController {
         
         CloudKitOperation<Category>.query(type: CKConstant.RecordType.Categories) { categories in
             self.categories = categories
-            self.categoryTable.reloadData()
+            self.tableView.reloadSections([0], with: .fade)
         }
     }
     
@@ -77,11 +79,12 @@ class NoteEditorViewController: UIViewController {
         return textView
     }()
     
-    lazy var categoryTable: UITableView = {
+    lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
         tableView.registerCell(NoteCategoryTableViewCell.self)
+        tableView.registerCell(NoteImageTableViewCell.self)
         tableView.separatorStyle = .none
         return tableView
     }()
@@ -102,10 +105,10 @@ class NoteEditorViewController: UIViewController {
         view.addConstraints(format: "V:[v0(80)]", views: noteView)
         noteView.topAnchor.constraint(equalTo: naviEdge.bottomAnchor, constant: 15).isActive = true
         
-        view.addSubview(categoryTable)
-        view.addConstraints(format: "H:|[v0]|", views: categoryTable)
-        categoryTable.topAnchor.constraint(equalTo: noteView.bottomAnchor, constant: 15).isActive = true
-        categoryTable.bottomAnchor.constraint(equalTo: bottomEdge.topAnchor, constant: 15).isActive = true
+        view.addSubview(tableView)
+        view.addConstraints(format: "H:|[v0]|", views: tableView)
+        tableView.topAnchor.constraint(equalTo: noteView.bottomAnchor, constant: 15).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: bottomEdge.topAnchor, constant: 15).isActive = true
     }
     
     // MARK: - Action
@@ -128,6 +131,31 @@ class NoteEditorViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    // MARK: - Method
+    
+    func pickImage() {
+        let imagePickerVC = UIImagePickerController()
+        imagePickerVC.sourceType = .photoLibrary
+        imagePickerVC.delegate = self
+        present(imagePickerVC, animated: true)
+    }
+    
+}
+
+extension NoteEditorViewController: UIImagePickerControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        
+        guard let image = info[.originalImage] as? UIImage else {
+            print("No image found")
+            return
+        }
+        
+        noteImage = image
+        tableView.reloadData()
+    }
+    
 }
 
 extension NoteEditorViewController: UITextViewDelegate {
@@ -139,34 +167,73 @@ extension NoteEditorViewController: UITextViewDelegate {
 }
 
 extension NoteEditorViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        if section == 0 {
+            return categories.count
+        } else {
+            return 1
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteCategoryTableViewCell
-        cell.textLabel?.text = categories[indexPath.row].name
-        if categories[indexPath.row].uuid == category?.uuid {
-            cell.accessoryType = .checkmark
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteCategoryTableViewCell
+            cell.textLabel?.text = categories[indexPath.row].name
+            if categories[indexPath.row].uuid == category?.uuid {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+            return cell
         } else {
-            cell.accessoryType = .none
+            let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteImageTableViewCell
+            cell.controller = self
+            cell.noteImageView.image = noteImage
+            return cell
         }
-        return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Select a category"
+        if section == 0 {
+            return "Category"
+        } else {
+            return "Image"
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard indexPath.section == 1 else { return }
+        if editingStyle == .delete {
+            noteImage = nil
+            tableView.reloadData()
+        }
     }
     
 }
 
 extension NoteEditorViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 15
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        category = categories[indexPath.row]
-        categoryTable.reloadData()
-        navigationItem.rightBarButtonItem?.isEnabled = isSaveEnable
+        if indexPath.section == 0 {
+            category = categories[indexPath.row]
+            tableView.reloadData()
+            navigationItem.rightBarButtonItem?.isEnabled = isSaveEnable
+        } else {
+            pickImage()
+        }
     }
     
 }
@@ -177,7 +244,6 @@ class NoteCategoryTableViewCell: UITableViewCell {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
-        self.accessoryType = .checkmark
         
         setupViews()
     }
@@ -193,6 +259,66 @@ class NoteCategoryTableViewCell: UITableViewCell {
         addSubview(bottomLine)
         addConstraints(format: "H:|-15-[v0]-15-|", views: bottomLine)
         addConstraints(format: "V:[v0(0.5)]|", views: bottomLine)
+    }
+    
+}
+
+class NoteImageTableViewCell: UITableViewCell {
+    
+    weak var controller: NoteEditorViewController?
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .none
+        
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let noteImageContainerView: UIView = {
+        let view = UIView()
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 0.5
+        view.layer.cornerRadius = 5
+        return view
+    }()
+    
+    lazy var addButton: UIButton = {
+        let button = UIButton(type: .contactAdd)
+        button.addTarget(self, action: #selector(handleAdd), for: .touchUpInside)
+        return button
+    }()
+    
+    let noteImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.layer.cornerRadius = 5
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    func setupViews() {
+        addSubview(noteImageContainerView)
+        addConstraints(format: "H:|-15-[v0]-15-|", views: noteImageContainerView)
+        addConstraints(format: "V:|-15-[v0(120)]-15-|", views: noteImageContainerView)
+        
+        noteImageContainerView.addSubview(addButton)
+        noteImageContainerView.addConstraints(format: "H:|[v0]|", views: addButton)
+        noteImageContainerView.addConstraints(format: "V:|[v0]|", views: addButton)
+        
+        addSubview(noteImageView)
+        addConstraints(format: "H:|-15-[v0]-15-|", views: noteImageView)
+        addConstraints(format: "V:|-15-[v0(120)]-15-|", views: noteImageView)
+    }
+    
+    // MARK: - Action
+    
+    @objc func handleAdd(){
+        controller?.pickImage()
     }
     
 }
