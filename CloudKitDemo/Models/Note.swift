@@ -46,14 +46,7 @@ extension Note: Record {
     
     func convertToCKRecord() -> CKRecord {
         let record = CKRecord(recordType: CKConstant.RecordType.Notes, recordID: getRecordID())
-        record.setValue(text, forKey: CKConstant.Field.text)
-        
-        if let categoryId = categoryId {
-            let reference = getCategoryReference(categoryId: categoryId)
-            record.setValue(reference, forKey: CKConstant.Field.category)
-        }
-        
-        return record
+        return mergeWithCKRecord(record)
     }
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
@@ -61,6 +54,8 @@ extension Note: Record {
         if let categoryId = categoryId {
             let reference = getCategoryReference(categoryId: categoryId)
             record.setValue(reference, forKey: CKConstant.Field.category)
+        } else {
+            record.setValue(nil, forKey: CKConstant.Field.category)
         }
         return record
     }

@@ -32,11 +32,7 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
     var noteImage: UIImage?
     
     var delegate: NoteEditorViewDelegate?
-    
-    var isSaveEnable: Bool {
-        return !noteView.text.isEmpty && category != nil
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,7 +40,7 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
         navigationItem.rightBarButtonItem = saveButton
         
         noteView.text = note?.text
-        saveButton.isEnabled = !noteView.text.isEmpty && category != nil
+        saveButton.isEnabled = !noteView.text.isEmpty
         
         setupViews()
         
@@ -161,7 +157,7 @@ extension NoteEditorViewController: UIImagePickerControllerDelegate {
 extension NoteEditorViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        navigationItem.rightBarButtonItem?.isEnabled = isSaveEnable
+        navigationItem.rightBarButtonItem?.isEnabled = !noteView.text.isEmpty
     }
     
 }
@@ -228,9 +224,9 @@ extension NoteEditorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            category = categories[indexPath.row]
+            let selected = categories[indexPath.row]
+            category = selected.uuid == category?.uuid ? nil : selected
             tableView.reloadData()
-            navigationItem.rightBarButtonItem?.isEnabled = isSaveEnable
         } else {
             pickImage()
         }
