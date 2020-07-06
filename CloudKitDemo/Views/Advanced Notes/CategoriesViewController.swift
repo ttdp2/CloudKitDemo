@@ -18,7 +18,9 @@ class CategoriesViewController: UIViewController {
         super.viewDidLoad()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
-        navigationItem.rightBarButtonItem = addButton
+        let batchButton = UIBarButtonItem(title: "Batch", style: .plain, target: self, action: #selector(handleBatch))
+        
+        navigationItem.rightBarButtonItems = [addButton, batchButton]
 
         setupViews()
         
@@ -50,6 +52,18 @@ class CategoriesViewController: UIViewController {
        
     @objc func handleAdd() {
         showEditor()
+    }
+    
+    @objc func handleBatch() {
+        let categories = [Category(name: "Swift 1"),
+                          Category(name: "Swift 2"),
+                          Category(name: "Swift 3"),
+                          Category(name: "Swift 4"),
+                          Category(name: "Swift 5")]
+        CloudKitOperation.batch(modelsToSave: categories, modelsToDelete: []) { (savedCategories, ids) in
+            self.categories += savedCategories
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - Method

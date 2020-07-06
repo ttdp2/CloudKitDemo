@@ -92,4 +92,27 @@ class CloudKitOperation<T: Record> {
         }
     }
     
+    static func batch(modelsToSave: [T], modelsToDelete: [T], completion: @escaping ([T], [String]) -> Void) {
+        let recordsToSave = modelsToSave.map { $0.convertToCKRecord() }
+        let recordIDsToDelete = modelsToDelete.map { $0.getRecordID() }
+        
+        let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: recordIDsToDelete)
+        operation.savePolicy = .changedKeys
+        operation.perRecordCompletionBlock = { record, error in }
+        operation.modifyRecordsCompletionBlock = { records, ids, error in
+            if error != nil {
+                print("Batch Error: \(error!)")
+            }
+            
+            let savedRecords = records?.map { T(record: $0) } ?? []
+            let deletedRecordIDs = ids?.map { $0.recordName } ?? []
+            
+            DispatchQueue.main.async {
+                completion(savedRecords, deletedRecordIDs)
+            }
+        }
+        
+        CloudKitManager.privateDB.add(operation)
+    }
+    
 }
