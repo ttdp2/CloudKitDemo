@@ -29,7 +29,7 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
         }
     }
     
-    var noteImage: UIImage?
+    var noteImage: Data?
     
     var delegate: NoteEditorViewDelegate?
 
@@ -40,6 +40,8 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
         navigationItem.rightBarButtonItem = saveButton
         
         noteView.text = note?.text
+        noteImage = note?.image
+        
         saveButton.isEnabled = !noteView.text.isEmpty
         
         setupViews()
@@ -115,13 +117,15 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
         }
         
         if let note = note {
-            var _note = Note(uuid: note.uuid, createdAt: note.createdAt, updatedAt: Date(), text: text)
-            _note.categoryId = category?.uuid
-            delegate?.editorView(didChange: _note)
+            var editedNote = Note(uuid: note.uuid, createdAt: note.createdAt, updatedAt: Date(), text: text)
+            editedNote.categoryId = category?.uuid
+            editedNote.image = noteImage
+            delegate?.editorView(didChange: editedNote)
         } else {
-            var note = Note(text: text)
-            note.categoryId = category?.uuid
-            delegate?.editorView(didAdd: note)
+            var newNote = Note(text: text)
+            newNote.categoryId = category?.uuid
+            newNote.image = noteImage
+            delegate?.editorView(didAdd: newNote)
         }
         
         navigationController?.popViewController(animated: true)
@@ -148,7 +152,7 @@ extension NoteEditorViewController: UIImagePickerControllerDelegate {
             return
         }
         
-        noteImage = image
+        noteImage = image.jpegData(compressionQuality: 0.3)
         tableView.reloadData()
     }
     
@@ -189,7 +193,11 @@ extension NoteEditorViewController: UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteImageTableViewCell
             cell.controller = self
-            cell.noteImageView.image = noteImage
+            if let imageData = noteImage {
+                cell.noteImageView.image = UIImage(data: imageData)
+            } else {
+                cell.noteImageView.image = nil
+            }
             return cell
         }
     }

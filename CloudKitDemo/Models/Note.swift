@@ -16,6 +16,7 @@ struct Note {
     
     let text: String
     var categoryId: String?
+    var image: Data?
 }
 
 extension Note: Record {
@@ -33,6 +34,7 @@ extension Note: Record {
         self.createdAt = record.creationDate!
         self.updatedAt = record.modificationDate!
         self.text = record.object(forKey: CKConstant.Field.text) as! String
+        self.image = record.object(forKey: CKConstant.Field.image) as? Data
         if let reference = record.object(forKey: CKConstant.Field.category) as? CKRecord.Reference {
             self.categoryId = reference.recordID.recordName
         }
@@ -51,12 +53,15 @@ extension Note: Record {
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(text, forKey: CKConstant.Field.text)
+        record.setValue(image, forKey: CKConstant.Field.image)
+        
         if let categoryId = categoryId {
             let reference = getCategoryReference(categoryId: categoryId)
             record.setValue(reference, forKey: CKConstant.Field.category)
         } else {
             record.setValue(nil, forKey: CKConstant.Field.category)
         }
+
         return record
     }
     
