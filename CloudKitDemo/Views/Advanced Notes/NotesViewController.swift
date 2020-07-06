@@ -14,48 +14,23 @@ class NotesViewController: UIViewController {
     
     // MARK: - Property
     
-    var notes: [Note] = []
-    var noteDic: [String?: [Note]] = [:]
-    
-    var categories: [Category] = []
-    var categoryNames: [String] = []
-    
-    var categoryNotes: [String: [Note]] = [:]
-    
-    var isCategoriesFetched = false {
+    var notes: [Note] = [] {
         didSet {
-            if isNotesFetched {
-                mergeDate()
-            }
+            combineNoteWithCategory()
         }
     }
-    var isNotesFetched = false {
+    
+    var categories: [Category] = [] {
         didSet {
-            if isCategoriesFetched {
-                mergeDate()
-            }
+            combineNoteWithCategory()
         }
     }
     
+    var combinedCategories: [Category] = []
     
-    var noteDicKeys: Array<Dictionary<String, Any>.Key> {
-        return Array(categoryNotes.keys)
-    }
-    
-    func mergeDate() {
-        let categoryDic = Dictionary(grouping: categories, by: { $0.uuid })
+    var isCategoriesFetched = false
+    var isNotesFetched = false
         
-        for (key, value) in noteDic {
-            if let uuid = key {
-                categoryNotes[categoryDic[uuid]!.first!.name] = value
-            } else {
-                categoryNotes["NO Names"] = value
-            }
-        }
-        
-        tableView.reloadData()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -68,15 +43,15 @@ class NotesViewController: UIViewController {
         setupViews()
         
         CloudKitOperation<Note>.query(type: CKConstant.RecordType.Notes) { notes in
-            self.noteDic = Dictionary(grouping: notes, by: { $0.categoryId })
+            self.isNotesFetched = true
             self.notes = notes
             self.tableView.reloadData()
-            self.isNotesFetched = true
         }
         
         CloudKitOperation<Category>.query(type: CKConstant.RecordType.Categories) { categories in
-            self.categories = categories
             self.isCategoriesFetched = true
+            self.categories = categories
+            self.tableView.reloadData()
         }
     }
     
@@ -119,6 +94,73 @@ class NotesViewController: UIViewController {
         navigationController?.pushViewController(editViewController, animated: true)
     }
     
+    func combineNoteWithCategory() {
+        guard isNotesFetched && isCategoriesFetched else { return }
+        
+        combinedCategories.removeAll()
+        
+        for var category in categories {
+            category.notes = notes.filter { $0.categoryId == category.uuid }
+            combinedCategories.append(category)
+        }
+        
+        let noCategoryNotes = notes.filter { $0.categoryId == nil }
+        var category = Category(name: "No Categories")
+        category.notes = noCategoryNotes
+        
+        combinedCategories.append(category)
+    }
+    
+}
+
+extension NotesViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return combinedCategories.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return combinedCategories[section].notes?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteTableViewCell
+        let category = combinedCategories[indexPath.section]
+        let note = category.notes?[indexPath.row]
+        cell.textLabel?.text = note?.text
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let category = combinedCategories[indexPath.section]
+            
+            guard let note = category.notes?[indexPath.row] else { return }
+            guard let index = notes.map({ $0.uuid }).firstIndex(of: note.uuid) else {
+                return
+            }
+            
+            notes.remove(at: index)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            CloudKitOperation.delete(model: note) { _ in }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return combinedCategories[section].name
+    }
+    
+}
+
+extension NotesViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let category = combinedCategories[indexPath.section]
+        let note = category.notes?[indexPath.row]
+        showEditor(note: note)
+    }
+    
 }
 
 extension NotesViewController: NoteEditorViewDelegate {
@@ -127,10 +169,7 @@ extension NotesViewController: NoteEditorViewDelegate {
         notes.append(note)
         tableView.reloadData()
         
-        CloudKitOperation.save(model: note) { savedIdea in
-            self.notes[self.notes.count - 1] = savedIdea
-            self.tableView.reloadData()
-        }
+        CloudKitOperation.save(model: note) { _ in }
     }
     
     func editorView(didChange note: Note) {
@@ -141,56 +180,7 @@ extension NotesViewController: NoteEditorViewDelegate {
         notes[index] = note
         tableView.reloadData()
         
-        CloudKitOperation.update(model: note) { updatedNote in
-            self.notes[index] = updatedNote
-            self.tableView.reloadData()
-        }
-    }
-    
-}
-
-extension NotesViewController: UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return noteDicKeys.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let key = noteDicKeys[section]
-        return categoryNotes[key]?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(forIndexPath: indexPath) as NoteTableViewCell
-        
-        let key = noteDicKeys[indexPath.section]
-        let notes = categoryNotes[key]
-        cell.textLabel?.text = notes?[indexPath.row].text
-        cell.imageView?.image = .checkmark
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let idea = notes.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            
-            CloudKitOperation.delete(model: idea) { _ in }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let key = noteDicKeys[section]
-        return key
-    }
-    
-}
-
-extension NotesViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let note = notes[indexPath.row]
-        showEditor(note: note)
+        CloudKitOperation.update(model: note) { _ in }
     }
     
 }

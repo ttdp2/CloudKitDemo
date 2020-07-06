@@ -15,6 +15,7 @@ struct Category {
     let updatedAt: Date
     
     let name: String
+    var notes: [Note]?
 }
 
 extension Category: Record {
