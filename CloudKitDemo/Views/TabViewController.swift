@@ -32,7 +32,7 @@ class TabViewController: UITabBarController {
         ideasPlusNav.tabBarItem = UITabBarItem(title: "Advanced", image: .checkmark, tag: 1)
         
         let photosVC = PhotosViewController()
-        photosVC.title = "Photo Sharing"
+        photosVC.title = "Photos"
         let photosNav = UINavigationController(rootViewController: photosVC)
         photosNav.tabBarItem = UITabBarItem(title: "Share", image: .checkmark, tag: 2)
         
