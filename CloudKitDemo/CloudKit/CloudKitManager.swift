@@ -25,6 +25,10 @@ class CloudKitManager {
         return UserDefaults.standard.bool(forKey: CKConstant.isPhotosZoneReady)
     }
     
+    static var isNotesSubcriptionReady: Bool {
+        return UserDefaults.standard.bool(forKey: CKConstant.isNotesSubscriptionReady)
+    }
+    
     class func setUpNotesZone() {
         let zoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [notesZone], recordZoneIDsToDelete: nil)
         
@@ -51,6 +55,28 @@ class CloudKitManager {
         }
         
         CloudKitManager.sharedDB.add(zoneOperation)
+    }
+    
+    class func setupNotesSubcription() {
+        let predicate = NSPredicate(value: true)
+        let options: CKQuerySubscription.Options = [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate]
+        
+        let subscription = CKQuerySubscription(recordType: CKConstant.RecordType.Notes, predicate: predicate, subscriptionID: CKConstant.Subscription.Notes, options: options)
+        
+        let into = CKSubscription.NotificationInfo()
+        into.alertBody = "A new notification has been posted!"
+        into.soundName = "default"
+        
+        subscription.notificationInfo = into
+        
+        CloudKitManager.privateDB.save(subscription) { sub, error in
+            guard sub != nil, error == nil else {
+                NSLog("Subscription failed: \(error!)")
+                return
+            }
+            
+            UserDefaults.standard.set(true, forKey: CKConstant.isNotesSubscriptionReady)
+        }
     }
     
 }

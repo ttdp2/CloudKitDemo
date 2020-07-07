@@ -8,7 +8,7 @@
 
 import UIKit
 
-// Advanced Features including: Reference, Batch Operation, Subscription
+// Advanced Features including: Reference, Asset, Batch Operation, Subscription
 
 class NotesViewController: UIViewController {
     

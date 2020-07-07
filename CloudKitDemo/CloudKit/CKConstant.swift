@@ -12,6 +12,11 @@ struct CKConstant {
     
     static let isNotesZoneReady = "isNotesZoneReady"
     static let isPhotosZoneReady = "isPhotosZoneReady"
+    static let isNotesSubscriptionReady = "isNotesSubscriptionReady"
+    
+    struct Subscription {
+        static let Notes = "Notes Subscription"
+    }
     
     struct Zone {
         static let Notes = "Notes Zone"
