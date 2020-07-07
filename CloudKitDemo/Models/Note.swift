@@ -34,9 +34,15 @@ extension Note: Record {
         self.createdAt = record.creationDate!
         self.updatedAt = record.modificationDate!
         self.text = record.object(forKey: CKConstant.Field.text) as! String
-        self.image = record.object(forKey: CKConstant.Field.image) as? Data
+        
         if let reference = record.object(forKey: CKConstant.Field.category) as? CKRecord.Reference {
             self.categoryId = reference.recordID.recordName
+        }
+        
+        if let asset = record.object(forKey: CKConstant.Field.image) as? CKAsset {
+            if let imageURL = asset.fileURL {
+                self.image = try? Data(contentsOf: imageURL)
+            }
         }
     }
     
@@ -53,13 +59,27 @@ extension Note: Record {
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
         record.setValue(text, forKey: CKConstant.Field.text)
-        record.setValue(image, forKey: CKConstant.Field.image)
         
         if let categoryId = categoryId {
             let reference = getCategoryReference(categoryId: categoryId)
             record.setValue(reference, forKey: CKConstant.Field.category)
         } else {
             record.setValue(nil, forKey: CKConstant.Field.category)
+        }
+        
+        if let imageData = image {
+            let tempDirectory = FileManager.default.temporaryDirectory
+            let imageURL = tempDirectory.appendingPathComponent(uuid)
+            do {
+                try imageData.write(to: imageURL)
+            } catch {
+                NSLog("Image can't write to \(imageURL), error: \(error)")
+            }
+            
+            let asset = CKAsset(fileURL: imageURL)
+            record.setValue(asset, forKey: CKConstant.Field.image)
+        } else {
+            record.setValue(nil, forKey: CKConstant.Field.image)
         }
 
         return record
