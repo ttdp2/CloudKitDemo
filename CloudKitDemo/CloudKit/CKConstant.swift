@@ -28,12 +28,14 @@ struct CKConstant {
         static let Ideas = "Ideas"
         static let Notes = "Notes"
         static let Categories = "Categories"
+        static let Photos = "Photos"
     }
     
     struct Field {
         static let title = "title"
         static let text = "text"
         static let name = "name"
+        static let data = "data"
         static let category = "category"
         static let image = "image"
     }

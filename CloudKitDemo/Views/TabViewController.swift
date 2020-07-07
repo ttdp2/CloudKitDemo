@@ -31,7 +31,12 @@ class TabViewController: UITabBarController {
         let ideasPlusNav = UINavigationController(rootViewController: ideasPlusVC)
         ideasPlusNav.tabBarItem = UITabBarItem(title: "Advanced", image: .checkmark, tag: 1)
         
-        viewControllers = [ideasNav, ideasPlusNav]
+        let photosVC = PhotosViewController()
+        photosVC.title = "Photo Sharing"
+        let photosNav = UINavigationController(rootViewController: photosVC)
+        photosNav.tabBarItem = UITabBarItem(title: "Share", image: .checkmark, tag: 2)
+        
+        viewControllers = [ideasNav, ideasPlusNav, photosNav]
     }
     
 }

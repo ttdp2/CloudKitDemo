@@ -32,6 +32,8 @@
 		AC41179E24AD62FD00501A5D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179D24AD62FD00501A5D /* Category.swift */; };
 		AC4117A024AD630600501A5D /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179F24AD630600501A5D /* Note.swift */; };
 		AC72AC2C24AEA142007CA763 /* RecordProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC72AC2B24AEA142007CA763 /* RecordProtocol.swift */; };
+		ACEC9D1E24B4659100F93559 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEC9D1D24B4659100F93559 /* Photo.swift */; };
+		ACEC9D2124B465CC00F93559 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEC9D2024B465CC00F93559 /* PhotosViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +65,8 @@
 		AC41179D24AD62FD00501A5D /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		AC41179F24AD630600501A5D /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		AC72AC2B24AEA142007CA763 /* RecordProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordProtocol.swift; sourceTree = "<group>"; };
+		ACEC9D1D24B4659100F93559 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		ACEC9D2024B465CC00F93559 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +88,7 @@
 				AC2D545024A9C6C600F8143E /* Idea.swift */,
 				AC41179F24AD630600501A5D /* Note.swift */,
 				AC41179D24AD62FD00501A5D /* Category.swift */,
+				ACEC9D1D24B4659100F93559 /* Photo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 				AC1D6F4D24AC06C400D40424 /* TabViewController.swift */,
 				AC41179224AD5FA400501A5D /* Basic Ideas */,
 				AC41179324AD5FB900501A5D /* Advanced Notes */,
+				ACEC9D1F24B465AC00F93559 /* Photos Sharing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -189,6 +195,14 @@
 				AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */,
 			);
 			path = "Advanced Notes";
+			sourceTree = "<group>";
+		};
+		ACEC9D1F24B465AC00F93559 /* Photos Sharing */ = {
+			isa = PBXGroup;
+			children = (
+				ACEC9D2024B465CC00F93559 /* PhotosViewController.swift */,
+			);
+			path = "Photos Sharing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +284,7 @@
 				AC1D6F4E24AC06C400D40424 /* TabViewController.swift in Sources */,
 				AC33F697249B2EC800C5655B /* AppDelegate.swift in Sources */,
 				AC25045924A96A56008052A4 /* CKConstant.swift in Sources */,
+				ACEC9D2124B465CC00F93559 /* PhotosViewController.swift in Sources */,
 				AC33F6B8249B343400C5655B /* EditorViewController.swift in Sources */,
 				AC72AC2C24AEA142007CA763 /* RecordProtocol.swift in Sources */,
 				AC29191B24AAB11B00C9BA38 /* CloudKitOperation.swift in Sources */,
@@ -277,6 +292,7 @@
 				AC41179E24AD62FD00501A5D /* Category.swift in Sources */,
 				AC4117A024AD630600501A5D /* Note.swift in Sources */,
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
+				ACEC9D1E24B4659100F93559 /* Photo.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
 				AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */,
 				AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */,
