@@ -14,15 +14,10 @@ class CloudKitManager {
     static let sharedDB = CKContainer.default().sharedCloudDatabase
     
     static let notesZone = CKRecordZone(zoneName: CKConstant.Zone.Notes)
-    static let photosZone = CKRecordZone(zoneName: CKConstant.Zone.Photos)
     static let defaultZone = CKRecordZone(zoneName: CKConstant.Zone.Default)
     
     static var isNotesZoneReady: Bool {
         return UserDefaults.standard.bool(forKey: CKConstant.isNotesZoneReady)
-    }
-    
-    static var isPhotosZoneReady: Bool {
-        return UserDefaults.standard.bool(forKey: CKConstant.isPhotosZoneReady)
     }
     
     static var isNotesSubcriptionReady: Bool {
@@ -42,21 +37,7 @@ class CloudKitManager {
         
         CloudKitManager.privateDB.add(zoneOperation)
     }
-    
-    class func setupPhotosZone() {
-        let zoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [photosZone], recordZoneIDsToDelete: nil)
-        
-        zoneOperation.modifyRecordZonesCompletionBlock = { _, _, error in
-            if let error = error {
-                NSLog("CloudKit ModifyRecordZones Error: \(error.localizedDescription)")
-            } else {
-                UserDefaults.standard.set(true, forKey: CKConstant.isPhotosZoneReady)
-            }
-        }
-        
-        CloudKitManager.sharedDB.add(zoneOperation)
-    }
-    
+
     class func setupNotesSubcription() {
         let predicate = NSPredicate(value: true)
         let options: CKQuerySubscription.Options = [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate]
