@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AC1D6F4E24AC06C400D40424 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F4D24AC06C400D40424 /* TabViewController.swift */; };
-		AC1D6F5024AC073E00D40424 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F4F24AC073E00D40424 /* PhotosViewController.swift */; };
-		AC1D6F5224AC51D000D40424 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F5124AC51D000D40424 /* Photo.swift */; };
 		AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */; };
 		AC25045924A96A56008052A4 /* CKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC25045824A96A56008052A4 /* CKConstant.swift */; };
 		AC29191B24AAB11B00C9BA38 /* CloudKitOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC29191A24AAB11B00C9BA38 /* CloudKitOperation.swift */; };
@@ -38,8 +36,6 @@
 
 /* Begin PBXFileReference section */
 		AC1D6F4D24AC06C400D40424 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
-		AC1D6F4F24AC073E00D40424 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
-		AC1D6F5124AC51D000D40424 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		AC25045824A96A56008052A4 /* CKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKConstant.swift; sourceTree = "<group>"; };
 		AC29191A24AAB11B00C9BA38 /* CloudKitOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitOperation.swift; sourceTree = "<group>"; };
@@ -88,7 +84,6 @@
 				AC2D545024A9C6C600F8143E /* Idea.swift */,
 				AC41179F24AD630600501A5D /* Note.swift */,
 				AC41179D24AD62FD00501A5D /* Category.swift */,
-				AC1D6F5124AC51D000D40424 /* Photo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -151,7 +146,6 @@
 				AC1D6F4D24AC06C400D40424 /* TabViewController.swift */,
 				AC41179224AD5FA400501A5D /* Basic Ideas */,
 				AC41179324AD5FB900501A5D /* Advanced Notes */,
-				AC41179424AD5FDB00501A5D /* Photo Sharing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -195,14 +189,6 @@
 				AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */,
 			);
 			path = "Advanced Notes";
-			sourceTree = "<group>";
-		};
-		AC41179424AD5FDB00501A5D /* Photo Sharing */ = {
-			isa = PBXGroup;
-			children = (
-				AC1D6F4F24AC073E00D40424 /* PhotosViewController.swift */,
-			);
-			path = "Photo Sharing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,7 +264,6 @@
 				AC2D545124A9C6C600F8143E /* Idea.swift in Sources */,
 				AC41179824AD60FD00501A5D /* NoteEditorViewController.swift in Sources */,
 				AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */,
-				AC1D6F5024AC073E00D40424 /* PhotosViewController.swift in Sources */,
 				AC41179A24AD62C700501A5D /* CategoriesViewController.swift in Sources */,
 				AC33F6BE249B382D00C5655B /* UIView+Extension.swift in Sources */,
 				AC33F6A1249B2EC800C5655B /* CloudKitDemo.xcdatamodeld in Sources */,
@@ -290,7 +275,6 @@
 				AC29191B24AAB11B00C9BA38 /* CloudKitOperation.swift in Sources */,
 				AC33F6C0249B385400C5655B /* UIViewController+Extension.swift in Sources */,
 				AC41179E24AD62FD00501A5D /* Category.swift in Sources */,
-				AC1D6F5224AC51D000D40424 /* Photo.swift in Sources */,
 				AC4117A024AD630600501A5D /* Note.swift in Sources */,
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
