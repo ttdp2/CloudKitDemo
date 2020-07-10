@@ -11,6 +11,7 @@
 		AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */; };
 		AC25045924A96A56008052A4 /* CKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC25045824A96A56008052A4 /* CKConstant.swift */; };
 		AC29191B24AAB11B00C9BA38 /* CloudKitOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC29191A24AAB11B00C9BA38 /* CloudKitOperation.swift */; };
+		AC2A136024B843F100AAA5F4 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A135F24B843F100AAA5F4 /* UICollectionView+Extension.swift */; };
 		AC2D545124A9C6C600F8143E /* Idea.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2D545024A9C6C600F8143E /* Idea.swift */; };
 		AC33F697249B2EC800C5655B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F696249B2EC800C5655B /* AppDelegate.swift */; };
 		AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC33F698249B2EC800C5655B /* SceneDelegate.swift */; };
@@ -41,6 +42,7 @@
 		AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		AC25045824A96A56008052A4 /* CKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKConstant.swift; sourceTree = "<group>"; };
 		AC29191A24AAB11B00C9BA38 /* CloudKitOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitOperation.swift; sourceTree = "<group>"; };
+		AC2A135F24B843F100AAA5F4 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		AC2D545024A9C6C600F8143E /* Idea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Idea.swift; sourceTree = "<group>"; };
 		AC33F693249B2EC800C5655B /* CloudKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CloudKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC33F696249B2EC800C5655B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				AC33F6BD249B382D00C5655B /* UIView+Extension.swift */,
 				AC33F6C1249B387900C5655B /* UITableView+Extension.swift */,
+				AC2A135F24B843F100AAA5F4 /* UICollectionView+Extension.swift */,
 				AC33F6BF249B385400C5655B /* UIViewController+Extension.swift */,
 				AC33F6C3249B38A000C5655B /* Date+Extension.swift */,
 			);
@@ -291,6 +294,7 @@
 				AC33F6C0249B385400C5655B /* UIViewController+Extension.swift in Sources */,
 				AC41179E24AD62FD00501A5D /* Category.swift in Sources */,
 				AC4117A024AD630600501A5D /* Note.swift in Sources */,
+				AC2A136024B843F100AAA5F4 /* UICollectionView+Extension.swift in Sources */,
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
 				ACEC9D1E24B4659100F93559 /* Photo.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
