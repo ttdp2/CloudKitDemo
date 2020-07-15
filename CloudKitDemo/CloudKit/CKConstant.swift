@@ -29,6 +29,7 @@ struct CKConstant {
         static let Notes = "Notes"
         static let Categories = "Categories"
         static let Photos = "Photos"
+        static let Albums = "Albums"
     }
     
     struct Field {

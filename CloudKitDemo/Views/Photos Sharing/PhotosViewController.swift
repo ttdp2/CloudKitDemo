@@ -7,13 +7,25 @@
 //
 
 import UIKit
+import CloudKit
 
 class PhotosViewController: UIViewController {
+    
+    // MARK: - Property
+    
+    var album: Album?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
+        navigationItem.rightBarButtonItem = shareButton
+        
         setupViews()
+        
+        CloudKitOperation<Album>.query(type: CKConstant.RecordType.Albums) { albums in
+            self.album = albums.first
+        }
     }
     
     // MARK: - View
@@ -36,6 +48,54 @@ class PhotosViewController: UIViewController {
         view.addSubview(collectionView)
         view.addConstraints(format: "H:|[v0]|", views: collectionView)
         view.addConstraints(format: "V:|[v0]|", views: collectionView)
+    }
+    
+    // MARK: - Action
+    
+    @objc func handleShare() {
+//        guard let sfAlbum = album else { return }
+        let record = Album(name: "TTSY").convertToCKRecord()
+        let share = CKShare(rootRecord: record)
+        
+        prepareToShare(share: share, record: record)
+    }
+    
+    // MARK: - Method
+    
+    func prepareToShare(share: CKShare, record: CKRecord) {
+        let sharingController = UICloudSharingController { (UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+            let operation = CKModifyRecordsOperation(recordsToSave: [record, share], recordIDsToDelete: nil)
+            operation.modifyRecordsCompletionBlock = { record, recordID, error in
+                handler(share, CKContainer.default(), error)
+            }
+            
+            CloudKitManager.privateDB.add(operation)
+        }
+        
+        sharingController.delegate = self
+        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
+        
+        navigationController?.present(sharingController, animated: true)
+    }
+    
+}
+
+extension PhotosViewController: UICloudSharingControllerDelegate {
+    
+    func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+        print("Saved successfully")
+    }
+    
+    func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+        print("Here error: \(error)")
+    }
+    
+    func itemTitle(for csc: UICloudSharingController) -> String? {
+        return "TTSY"
+    }
+    
+    func itemType(for csc: UICloudSharingController) -> String? {
+        return "com.ttdp.CloudKit"
     }
     
 }

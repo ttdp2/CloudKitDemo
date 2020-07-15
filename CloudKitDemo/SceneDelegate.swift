@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CloudKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -34,6 +35,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if !CloudKitManager.isNotesSubcriptionReady {
             CloudKitManager.setupNotesSubcription()
         }
+        
+        if !CloudKitManager.isPhotosZoneReady {
+            CloudKitManager.setupPhotosZone()
+        }
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -59,6 +64,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+    }
+    
+    func windowScene(_ windowScene: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+        let acceptOperation: CKAcceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
+        
+        acceptOperation.qualityOfService = .userInteractive
+        acceptOperation.perShareCompletionBlock = { meta, share, error in
+            print("Shared successfully")
+        }
+        
+        acceptOperation.acceptSharesCompletionBlock = { error in
+            // go where the user need to go
+            print("Here we go")
+            
+            let fetchOperation = CKFetchRecordsOperation(recordIDs: [cloudKitShareMetadata.rootRecordID])
+            
+            fetchOperation.perRecordCompletionBlock = { record, _, error in
+                guard error == nil, record != nil else {
+                    print("Fetch error: \(error!)")
+                    return
+                }
+                
+                print(record!)
+            }
+            
+            fetchOperation.fetchRecordsCompletionBlock = { dic, error in
+                print("Fetched complete")
+                print(dic ?? [:])
+            }
+            
+            CloudKitManager.sharedDB.add(fetchOperation)
+        }
+        
+        CKContainer.default().add(acceptOperation)
     }
     
 }

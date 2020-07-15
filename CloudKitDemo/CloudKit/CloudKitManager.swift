@@ -54,7 +54,7 @@ class CloudKitManager {
             }
         }
         
-        CloudKitManager.sharedDB.add(zoneOperation)
+        CloudKitManager.privateDB.add(zoneOperation)
     }
 
     class func setupNotesSubcription() {
