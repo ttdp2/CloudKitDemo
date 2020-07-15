@@ -13,7 +13,7 @@ protocol NoteEditorViewDelegate {
     func editorView(didChange note: Note)
 }
 
-class NoteEditorViewController: UIViewController, UINavigationControllerDelegate {
+class NoteEditorViewController: UIViewController {
     
     // MARK: - Property
     
@@ -142,7 +142,7 @@ class NoteEditorViewController: UIViewController, UINavigationControllerDelegate
     
 }
 
-extension NoteEditorViewController: UIImagePickerControllerDelegate {
+extension NoteEditorViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
