@@ -16,7 +16,6 @@ struct Photo {
     let updatedAt: Date
     
     let data: Data
-    var album: Album?
 }
 
 extension Photo: Record {
@@ -67,7 +66,6 @@ extension Photo: Record {
         
         let asset = CKAsset(fileURL: imageURL)
         record.setValue(asset, forKey: CKConstant.Field.data)
-        record.setParent(album?.convertToCKRecord())
         return record
     }
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		714DBA1524C0841800382F90 /* CloudKitShareOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DBA1424C0841800382F90 /* CloudKitShareOperation.swift */; };
 		AC1D6F4E24AC06C400D40424 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F4D24AC06C400D40424 /* TabViewController.swift */; };
 		AC1D6F5424AC6D2100D40424 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */; };
 		AC25045924A96A56008052A4 /* CKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC25045824A96A56008052A4 /* CKConstant.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		714DBA1424C0841800382F90 /* CloudKitShareOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitShareOperation.swift; sourceTree = "<group>"; };
 		AC1D6F4D24AC06C400D40424 /* TabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		AC1D6F5324AC6D2100D40424 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		AC25045824A96A56008052A4 /* CKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKConstant.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				AC33F6C6249B395D00C5655B /* CloudKitManager.swift */,
 				AC29191A24AAB11B00C9BA38 /* CloudKitOperation.swift */,
 				AC25045824A96A56008052A4 /* CKConstant.swift */,
+				714DBA1424C0841800382F90 /* CloudKitShareOperation.swift */,
 			);
 			path = CloudKit;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
 				AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */,
 				AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */,
+				714DBA1524C0841800382F90 /* CloudKitShareOperation.swift in Sources */,
 				AC41179C24AD62DE00501A5D /* CategoryEditorViewController.swift in Sources */,
 				AC33F6C7249B395D00C5655B /* CloudKitManager.swift in Sources */,
 				AC33F6C4249B38A000C5655B /* Date+Extension.swift in Sources */,

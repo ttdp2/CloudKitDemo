@@ -22,7 +22,8 @@ class PhotosViewController: UIViewController {
         super.viewDidLoad()
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
-        navigationItem.rightBarButtonItem = addButton
+        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
+        navigationItem.rightBarButtonItems = [addButton, shareButton]
         
         setupViews()
         
@@ -73,6 +74,10 @@ class PhotosViewController: UIViewController {
         } else {
             setupAlbum()
         }
+    }
+    
+    @objc func handleShare() {
+        
     }
     
     // MARK: - Method
@@ -133,6 +138,23 @@ class PhotosViewController: UIViewController {
             }
         }
     }
+    
+    func saveSharedPhoto(_ photo: Photo) {
+        let photoRecord = photo.convertToCKRecord()
+        if isParticipant {
+            let shareOperation = CloudKitShareOperation(isOwner: false)
+            let parent = photos.first?.convertToCKRecord()
+            shareOperation.save(record: photoRecord, parent: parent) { success in
+                print(success)
+            }
+        } else {
+            let shareOperation = CloudKitShareOperation(isOwner: true)
+            let albumRecord = album?.convertToCKRecord()
+            shareOperation.save(record: photoRecord, parent: albumRecord) { success in
+                print(success)
+            }
+        }
+    }
 
 }
 
@@ -147,32 +169,11 @@ extension PhotosViewController: UIImagePickerControllerDelegate, UINavigationCon
         }
         
         let imageData = image.jpegData(compressionQuality: 0.3)!
-        var photo = Photo(data: imageData)
+        let photo = Photo(data: imageData)
         photos.append(photo)
         collectionView.reloadData()
         
-        // When converting to CKRecord, album will be set as parent record
-        photo.album = album
-        
-//        CloudKitOperation.save(model: photo) { _ in }
-        
-        let photoRecord = CKRecord(recordType: "Photos", recordID: CKRecord.ID(recordName: UUID().uuidString, zoneID: zoneID!))
-        let tempDirectory = FileManager.default.temporaryDirectory
-        let imageURL = tempDirectory.appendingPathComponent(UUID().uuidString)
-        do {
-            try imageData.write(to: imageURL)
-        } catch {
-            NSLog("Image can't write to \(imageURL), error: \(error)")
-        }
-        
-        let asset = CKAsset(fileURL: imageURL)
-        photoRecord.setValue(asset, forKey: CKConstant.Field.data)
-        photoRecord.setParent(zoneRecordID)
-        
-        CloudKitManager.sharedDB.save(photoRecord) { record, error in
-            print(record)
-            print(error)
-        }
+        saveSharedPhoto(photo)
     }
     
 }
