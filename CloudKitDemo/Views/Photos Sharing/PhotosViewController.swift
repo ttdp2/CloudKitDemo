@@ -109,6 +109,9 @@ class PhotosViewController: UIViewController {
         navigationController?.present(sharingController, animated: true)
     }
     
+    var zoneID: CKRecordZone.ID?
+    var zoneRecordID: CKRecord.ID?
+    
     func fetchSharedPhotos() {
         CloudKitManager.sharedDB.fetchAllRecordZones { zones, error in
             guard let photoZone = zones?.first else { return }
@@ -123,6 +126,9 @@ class PhotosViewController: UIViewController {
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
+                    
+                    self.zoneID = photoZone.zoneID
+                    self.zoneRecordID = records?.first?.recordID
                 }
             }
         }
@@ -148,7 +154,25 @@ extension PhotosViewController: UIImagePickerControllerDelegate, UINavigationCon
         // When converting to CKRecord, album will be set as parent record
         photo.album = album
         
-        CloudKitOperation.save(model: photo) { _ in }
+//        CloudKitOperation.save(model: photo) { _ in }
+        
+        let photoRecord = CKRecord(recordType: "Photos", recordID: CKRecord.ID(recordName: UUID().uuidString, zoneID: zoneID!))
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let imageURL = tempDirectory.appendingPathComponent(UUID().uuidString)
+        do {
+            try imageData.write(to: imageURL)
+        } catch {
+            NSLog("Image can't write to \(imageURL), error: \(error)")
+        }
+        
+        let asset = CKAsset(fileURL: imageURL)
+        photoRecord.setValue(asset, forKey: CKConstant.Field.data)
+        photoRecord.setParent(zoneRecordID)
+        
+        CloudKitManager.sharedDB.save(photoRecord) { record, error in
+            print(record)
+            print(error)
+        }
     }
     
 }
