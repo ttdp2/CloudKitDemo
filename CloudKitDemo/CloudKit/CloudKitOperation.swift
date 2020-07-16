@@ -115,4 +115,16 @@ class CloudKitOperation<T: Record> {
         CloudKitManager.privateDB.add(operation)
     }
     
+    static func modifyRecords(save records: [CKRecord], delete recordIDs: [CKRecord.ID], completion: @escaping () -> Void) {
+        let modifyOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDs)
+
+        modifyOperation.completionBlock = {
+            DispatchQueue.main.async {
+                completion()
+            }
+        }
+
+        CloudKitManager.privateDB.add(modifyOperation)
+    }
+    
 }

@@ -16,6 +16,8 @@ class PhotosViewController: UIViewController {
     var album: Album?
     var photos: [Photo] = []
     
+    var isParticipant = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,12 +28,16 @@ class PhotosViewController: UIViewController {
         
         CloudKitOperation<Album>.query(type: CKConstant.RecordType.Albums) { albums in
             self.album = albums.first
-            self.setupAlbum()
         }
         
         CloudKitOperation<Photo>.query(type: CKConstant.RecordType.Photos) { photos in
-            self.photos = photos
+            if !photos.isEmpty {
+                self.photos = photos
+                self.collectionView.reloadData()
+            }
         }
+        
+        fetchSharedPhotos()
     }
     
     // MARK: - View
@@ -59,10 +65,14 @@ class PhotosViewController: UIViewController {
     // MARK: - Action
     
     @objc func handleAdd() {
-        let imagePickerVC = UIImagePickerController()
-        imagePickerVC.sourceType = .photoLibrary
-        imagePickerVC.delegate = self
-        present(imagePickerVC, animated: true)
+        if isParticipant || album != nil {
+            let imagePickerVC = UIImagePickerController()
+            imagePickerVC.sourceType = .photoLibrary
+            imagePickerVC.delegate = self
+            present(imagePickerVC, animated: true)
+        } else {
+            setupAlbum()
+        }
     }
     
     // MARK: - Method
@@ -99,6 +109,25 @@ class PhotosViewController: UIViewController {
         navigationController?.present(sharingController, animated: true)
     }
     
+    func fetchSharedPhotos() {
+        CloudKitManager.sharedDB.fetchAllRecordZones { zones, error in
+            guard let photoZone = zones?.first else { return }
+
+            self.isParticipant = true
+            let query = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: NSPredicate(value: true))
+            
+            CloudKitManager.sharedDB.perform(query, inZoneWith: photoZone.zoneID) { records, error in
+                if let photoRecords = records {
+                    self.photos = photoRecords.map { Photo(record: $0)}
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 extension PhotosViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
@@ -112,26 +141,14 @@ extension PhotosViewController: UIImagePickerControllerDelegate, UINavigationCon
         }
         
         let imageData = image.jpegData(compressionQuality: 0.3)!
-        let photo = Photo(data: imageData)
+        var photo = Photo(data: imageData)
         photos.append(photo)
         collectionView.reloadData()
         
-        guard let rootRecord = album?.convertToCKRecord() else { return }
+        // When converting to CKRecord, album will be set as parent record
+        photo.album = album
         
-        let shareRecord = CKShare(rootRecord: rootRecord)
-        let photoRecord = photo.convertToCKRecord()
-        photoRecord.setParent(shareRecord)
-        
-        let modifyOperation = CKModifyRecordsOperation(recordsToSave: [photoRecord], recordIDsToDelete: nil)
-        modifyOperation.perRecordCompletionBlock = { record, error in
-            print(record)
-        }
-        
-        modifyOperation.completionBlock = {
-            print("Add shared photos done")
-        }
-        
-        CloudKitManager.privateDB.add(modifyOperation)
+        CloudKitOperation.save(model: photo) { _ in }
     }
     
 }
@@ -143,17 +160,13 @@ extension PhotosViewController: UICloudSharingControllerDelegate {
     }
     
     func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-        print("Here error: \(error)")
+        print("Save error: \(error)")
     }
     
     func itemTitle(for csc: UICloudSharingController) -> String? {
         return "Shared Album"
     }
-    
-    func itemType(for csc: UICloudSharingController) -> String? {
-        return "com.ttdp.CloudKit"
-    }
-    
+
 }
 
 extension PhotosViewController: UICollectionViewDataSource {
@@ -175,9 +188,11 @@ extension PhotosViewController: UICollectionViewDelegate {
 }
 
 extension PhotosViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 100, height: 100)
     }
+    
 }
 
 class PhotoCollectionCell: UICollectionViewCell {

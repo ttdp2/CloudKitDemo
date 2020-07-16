@@ -16,6 +16,7 @@ struct Photo {
     let updatedAt: Date
     
     let data: Data
+    var album: Album?
 }
 
 extension Photo: Record {
@@ -33,7 +34,15 @@ extension Photo: Record {
         self.createdAt = record.creationDate!
         self.updatedAt = record.modificationDate!
         
-        self.data = record.value(forKey: CKConstant.Field.data) as! Data
+        guard
+            let asset = record.object(forKey: CKConstant.Field.data) as? CKAsset,
+            let imageURL = asset.fileURL,
+            let imageDate = try? Data(contentsOf: imageURL) else {
+                self.data = Data()
+                return
+        }
+        
+        self.data = imageDate
     }
     
     func getRecordID() -> CKRecord.ID {
@@ -44,12 +53,21 @@ extension Photo: Record {
     
     func convertToCKRecord() -> CKRecord {
         let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: getRecordID())
-        record.setValue(data, forKey: CKConstant.Field.data)
-        return record
+        return mergeWithCKRecord(record)
     }
     
     func mergeWithCKRecord(_ record: CKRecord) -> CKRecord {
-        record.setValue(data, forKey: CKConstant.Field.data)
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let imageURL = tempDirectory.appendingPathComponent(uuid)
+        do {
+            try data.write(to: imageURL)
+        } catch {
+            NSLog("Image can't write to \(imageURL), error: \(error)")
+        }
+        
+        let asset = CKAsset(fileURL: imageURL)
+        record.setValue(asset, forKey: CKConstant.Field.data)
+        record.setParent(album?.convertToCKRecord())
         return record
     }
     
