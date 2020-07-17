@@ -30,6 +30,7 @@ struct CKConstant {
         static let Categories = "Categories"
         static let Photos = "Photos"
         static let Albums = "Albums"
+        static let CloudKitShare = "cloudkit.share"
     }
     
     struct Field {

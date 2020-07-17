@@ -12,13 +12,13 @@ class PhotosViewController: UIViewController {
     
     // MARK: - Property
     
-    var album: Album?
-    var photos: [Photo] = []
-    
-    var sharedRoot: CKRecord?
-    var isParticipant = false
-    
-    var share: CKShare?
+//    var album: Album?
+//    var photos: [Photo] = []
+//
+//    var sharedRoot: CKRecord?
+//    var isParticipant = false
+//
+//    var share: CKShare?
     
     var viewModel: PhotosViewModel!
     
@@ -33,25 +33,25 @@ class PhotosViewController: UIViewController {
             self.collectionView.reloadData()
         }
         
-        CloudKitOperation<Album>.query(type: CKConstant.RecordType.Albums) { albums in
-            self.album = albums.first
-        }
-        
-        CloudKitOperation<Photo>.query(type: CKConstant.RecordType.Photos) { photos in
-            if !photos.isEmpty {
-                self.photos = photos
-                self.collectionView.reloadData()
-            }
-        }
-        
-        CloudKitManager.privateDB.perform(CKQuery(recordType: "cloudkit.share", predicate: NSPredicate(value: true)), inZoneWith: CloudKitManager.photosZone.zoneID) { (records, error) in
-            if let share = records?.first as? CKShare {
-                self.share = share
-                print(share)
-            }
-        }
-        
-        fetchSharedPhotos()
+//        CloudKitOperation<Album>.query(type: CKConstant.RecordType.Albums) { albums in
+//            self.album = albums.first
+//        }
+//
+//        CloudKitOperation<Photo>.query(type: CKConstant.RecordType.Photos) { photos in
+//            if !photos.isEmpty {
+//                self.photos = photos
+//                self.collectionView.reloadData()
+//            }
+//        }
+//
+//        CloudKitManager.privateDB.perform(CKQuery(recordType: "cloudkit.share", predicate: NSPredicate(value: true)), inZoneWith: CloudKitManager.photosZone.zoneID) { (records, error) in
+//            if let share = records?.first as? CKShare {
+//                self.share = share
+//                print(share)
+//            }
+//        }
+//
+//        fetchSharedPhotos()
     }
     
     // MARK: - View
@@ -83,129 +83,129 @@ class PhotosViewController: UIViewController {
     // MARK: - Action
     
     @objc func handleAdd() {
-        if isParticipant || album != nil {
-            let imagePickerVC = UIImagePickerController()
-            imagePickerVC.sourceType = .photoLibrary
-            imagePickerVC.delegate = self
-            present(imagePickerVC, animated: true)
-        } else {
-            setupAlbum()
-        }
+//        if isParticipant || album != nil {
+//            let imagePickerVC = UIImagePickerController()
+//            imagePickerVC.sourceType = .photoLibrary
+//            imagePickerVC.delegate = self
+//            present(imagePickerVC, animated: true)
+//        } else {
+//            setupAlbum()
+//        }
     }
     
     @objc func handleShare() {
-        let record = album!.convertToCKRecord()
-        
-        continueToShare(share: share!, record: record)
+//        let record = album!.convertToCKRecord()
+//
+//        continueToShare(share: share!, record: record)
     }
     
     // MARK: - Method
     
     func setupAlbum() {
-        if album == nil {
-            let _album = Album(name: "Shared Album")
-            let record = _album.convertToCKRecord()
-            let share = CKShare(rootRecord: record)
-            
-            prepareToShare(share: share, record: record)
-        } else {
-            let record = album!.convertToCKRecord()
-            let share = CKShare(rootRecord: record)
-            
-            continueToShare(share: share, record: record)
-        }
+//        if album == nil {
+//            let _album = Album(name: "Shared Album")
+//            let record = _album.convertToCKRecord()
+//            let share = CKShare(rootRecord: record)
+//
+//            prepareToShare(share: share, record: record)
+//        } else {
+//            let record = album!.convertToCKRecord()
+//            let share = CKShare(rootRecord: record)
+//
+//            continueToShare(share: share, record: record)
+//        }
     }
     
-    func prepareToShare(share: CKShare, record: CKRecord) {
-        let sharingController = UICloudSharingController { (UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-            let operation = CKModifyRecordsOperation(recordsToSave: [share, record], recordIDsToDelete: nil)
-            operation.modifyRecordsCompletionBlock = { _, _, error in
-                if let error = error {
-                    print("Modify error: \(error)")
-                } else {
-                    print("Modified successfully")
-                    self.album = Album(record: record)
-                }
-                handler(share, CKContainer.default(), error)
-            }
-            
-            CloudKitManager.privateDB.add(operation)
-        }
-        
-        sharingController.delegate = self
-        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
-        
-        navigationController?.present(sharingController, animated: true)
-    }
+//    func prepareToShare(share: CKShare, record: CKRecord) {
+//        let sharingController = UICloudSharingController { (UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+//            let operation = CKModifyRecordsOperation(recordsToSave: [share, record], recordIDsToDelete: nil)
+//            operation.modifyRecordsCompletionBlock = { _, _, error in
+//                if let error = error {
+//                    print("Modify error: \(error)")
+//                } else {
+//                    print("Modified successfully")
+//                    self.album = Album(record: record)
+//                }
+//                handler(share, CKContainer.default(), error)
+//            }
+//
+//            CloudKitManager.privateDB.add(operation)
+//        }
+//
+//        sharingController.delegate = self
+//        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
+//
+//        navigationController?.present(sharingController, animated: true)
+//    }
     
-    func continueToShare(share: CKShare, record: CKRecord) {
-        let sharingController = UICloudSharingController(share: share, container: CKContainer.default())
-        sharingController.delegate = self
-        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
-        
-        navigationController?.present(sharingController, animated: true)
-    }
+//    func continueToShare(share: CKShare, record: CKRecord) {
+//        let sharingController = UICloudSharingController(share: share, container: CKContainer.default())
+//        sharingController.delegate = self
+//        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
+//
+//        navigationController?.present(sharingController, animated: true)
+//    }
+//
+//    var zoneID: CKRecordZone.ID?
+//    var zoneRecordID: CKRecord.ID?
     
-    var zoneID: CKRecordZone.ID?
-    var zoneRecordID: CKRecord.ID?
-    
-    func fetchSharedPhotos() {
-        CloudKitManager.sharedDB.fetchAllRecordZones { zones, error in
-            guard let sharedPhotoZone = zones?.first else { return }
-
-            self.isParticipant = true
-            
-            let predicate = NSPredicate(value: true)
-            let photoQuery = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: predicate)
-            
-            CloudKitManager.sharedDB.perform(photoQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
-                if let photoRecords = records {
-                    self.photos = photoRecords.map { Photo(record: $0)}
-                    
-                    DispatchQueue.main.async {
-                        self.collectionView.reloadData()
-                    }
-                    
-                    self.zoneID = sharedPhotoZone.zoneID
-                    self.zoneRecordID = records?.first?.recordID
-                }
-            }
-            
-            let albumQuery = CKQuery(recordType: CKConstant.RecordType.Albums, predicate: predicate)
-            
-            CloudKitManager.sharedDB.perform(albumQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
-                self.sharedRoot = records?.first
-                print(error ?? "Done")
-            }
-        }
-    }
+//    func fetchSharedPhotos() {
+//        CloudKitManager.sharedDB.fetchAllRecordZones { zones, error in
+//            guard let sharedPhotoZone = zones?.first else { return }
+//
+//            self.isParticipant = true
+//
+//            let predicate = NSPredicate(value: true)
+//            let photoQuery = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: predicate)
+//
+//            CloudKitManager.sharedDB.perform(photoQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
+//                if let photoRecords = records {
+//                    self.photos = photoRecords.map { Photo(record: $0)}
+//
+//                    DispatchQueue.main.async {
+//                        self.collectionView.reloadData()
+//                    }
+//
+//                    self.zoneID = sharedPhotoZone.zoneID
+//                    self.zoneRecordID = records?.first?.recordID
+//                }
+//            }
+//
+//            let albumQuery = CKQuery(recordType: CKConstant.RecordType.Albums, predicate: predicate)
+//
+//            CloudKitManager.sharedDB.perform(albumQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
+//                self.sharedRoot = records?.first
+//                print(error ?? "Done")
+//            }
+//        }
+//    }
     
     // Participant Zone: <CKRecordZoneID: 0x280b991c0; ownerName=_a9bdc43038d1f1d3fee0b5b9e5c6010e, zoneName=Photos Zone>
     // Owner Zone: <CKRecordZoneID: 0x2816a0e60; ownerName=__defaultOwner__, zoneName=Photos Zone>
-    func saveSharedPhoto(_ photo: Photo) {
-        if isParticipant {
-            guard let zoneID = sharedRoot?.recordID.zoneID else {
-                return
-            }
-            
-            let recordID = CKRecord.ID(recordName: photo.uuid, zoneID: zoneID)
-            let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
-            let photoRecord = photo.mergeWithCKRecord(record)
-            
-            let shareOperation = CloudKitShareOperation(isOwner: false)
-            shareOperation.save(record: photoRecord, parent: sharedRoot) { success in
-                print(success)
-            }
-        } else {
-            let photoRecord = photo.convertToCKRecord()
-            let albumRecord = album?.convertToCKRecord()
-            
-            let shareOperation = CloudKitShareOperation(isOwner: true)
-            shareOperation.save(record: photoRecord, parent: albumRecord) { success in
-                print(success)
-            }
-        }
-    }
+//    func saveSharedPhoto(_ photo: Photo) {
+//        if isParticipant {
+//            guard let zoneID = sharedRoot?.recordID.zoneID else {
+//                return
+//            }
+//
+//            let recordID = CKRecord.ID(recordName: photo.uuid, zoneID: zoneID)
+//            let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
+//            let photoRecord = photo.mergeWithCKRecord(record)
+//
+//            let shareOperation = CloudKitShareOperation(isOwner: false)
+//            shareOperation.save(record: photoRecord, parent: sharedRoot) { success in
+//                print(success)
+//            }
+//        } else {
+//            let photoRecord = photo.convertToCKRecord()
+//            let albumRecord = album?.convertToCKRecord()
+//
+//            let shareOperation = CloudKitShareOperation(isOwner: true)
+//            shareOperation.save(record: photoRecord, parent: albumRecord) { success in
+//                print(success)
+//            }
+//        }
+//    }
 
 }
 
@@ -221,10 +221,10 @@ extension PhotosViewController: UIImagePickerControllerDelegate, UINavigationCon
         
         let imageData = image.jpegData(compressionQuality: 0.3)!
         let photo = Photo(data: imageData)
-        photos.append(photo)
+        viewModel.photos.append(photo)
         collectionView.reloadData()
         
-        saveSharedPhoto(photo)
+//        saveSharedPhoto(photo)
     }
     
 }
