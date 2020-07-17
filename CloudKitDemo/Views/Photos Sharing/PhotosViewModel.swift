@@ -6,15 +6,21 @@
 //  Copyright © 2020 TTDP. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CloudKit
+
+protocol PhotosViewModelDelegate: class {
+    func showSharingController(_ controller: UICloudSharingController)
+}
 
 class PhotosViewModel {
     
     // MARK: - Property
     
+    weak var delegate: PhotosViewModelDelegate?
+    
     var share: CKShare?
-    var rootRecord: CKRecord?
+    var root: CKRecord?
     
     var photos: [Photo] = []
     
@@ -26,6 +32,11 @@ class PhotosViewModel {
     let sharedDB = CloudKitManager.sharedDB
     var sharedZone: CKRecordZone?
     
+    /* Example
+     Owner Zone: <CKRecordZoneID: 0x2816a0e60; ownerName=__defaultOwner__, zoneName=Photos Zone>
+     
+     Participant Zone: <CKRecordZoneID: 0x280b991c0; ownerName=_a9bdc43038d1f1d3fee0b5b9e5c6010e, zoneName=Photos Zone>
+    */
     
     func fetchPhotos(completion: @escaping () -> Void) {
         let predicate = NSPredicate(value: true)
@@ -47,7 +58,7 @@ class PhotosViewModel {
         // Fetch owner's root album in his private database
         privateDB.perform(albumQuery, inZoneWith: privateZone.zoneID) { records, error in
             if let record = records?.first {
-                self.rootRecord = record
+                self.root = record
             }
         }
         
@@ -81,10 +92,88 @@ class PhotosViewModel {
             // Fetch owner's root album in participant's shared database
             self.sharedDB.perform(albumQuery, inZoneWith: zone.zoneID) { records, error in
                 if let record = records?.first {
-                    self.rootRecord = record
+                    self.root = record
                 }
             }
         }
+    }
+    
+    func addPhoto(_ photo: Photo) {
+        photos.append(photo)
+        
+        uploadToCloudKit(photo)
+    }
+    
+    private func uploadToCloudKit(_ photo: Photo) {
+        if isOwner {
+            let record = photo.convertToCKRecord()
+            record.setParent(root)
+            
+            privateDB.save(record) { savedRecord, error in
+                if let error = error {
+                    print("Owner upload photo error: \(error)")
+                }
+                
+                if savedRecord != nil {
+                    print("Owner upload photo successfully")
+                }
+            }
+        } else {
+            guard let zoneID = sharedZone?.zoneID else {
+                print("Participant has no shared zones")
+                return
+            }
+            let recordID = CKRecord.ID(recordName: photo.uuid, zoneID: zoneID)
+            var record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
+            record = photo.mergeWithCKRecord(record)
+            record.setParent(root)
+            
+            sharedDB.save(record) { savedRecord, error in
+                if let error = error {
+                    print("Participant upload photo error: \(error)")
+                }
+                
+                if savedRecord != nil {
+                    print("Participant upload photo successfully")
+                }
+            }
+        }
+    }
+    
+    func addShare() {
+        let controller: UICloudSharingController
+        
+        if let shareRecord = share {
+            controller = UICloudSharingController(share: shareRecord, container: CKContainer.default())
+        } else {
+            controller = UICloudSharingController { (UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+                
+                let root = Album(name: "Shared Album").convertToCKRecord()
+                let share = CKShare(rootRecord: root)
+                let operation = CKModifyRecordsOperation(recordsToSave: [share, root], recordIDsToDelete: nil)
+                
+                operation.modifyRecordsCompletionBlock = { _, _, error in
+                    if let error = error {
+                        print("Owner upload root album error: \(error)")
+                    } else {
+                        self.root = root
+                        self.share = share
+                        print("Owner upload root album successfully")
+                    }
+                    handler(share, CKContainer.default(), error)
+                }
+    
+                self.privateDB.add(operation)
+            }
+            controller.availablePermissions = [.allowPrivate, .allowReadWrite]
+        }
+        
+        delegate?.showSharingController(controller)
+    }
+    
+    func stopShare() {
+        share = nil
+        root = nil
     }
     
 }
