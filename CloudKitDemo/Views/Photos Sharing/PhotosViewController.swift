@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CloudKit
 
 class PhotosViewController: UIViewController {
     
@@ -16,16 +15,23 @@ class PhotosViewController: UIViewController {
     var album: Album?
     var photos: [Photo] = []
     
+    var sharedRoot: CKRecord?
     var isParticipant = false
+    
+    var share: CKShare?
+    
+    var viewModel: PhotosViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
-        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
-        navigationItem.rightBarButtonItems = [addButton, shareButton]
+        viewModel = PhotosViewModel()
         
         setupViews()
+        
+        viewModel.fetchPhotos {
+            self.collectionView.reloadData()
+        }
         
         CloudKitOperation<Album>.query(type: CKConstant.RecordType.Albums) { albums in
             self.album = albums.first
@@ -35,6 +41,13 @@ class PhotosViewController: UIViewController {
             if !photos.isEmpty {
                 self.photos = photos
                 self.collectionView.reloadData()
+            }
+        }
+        
+        CloudKitManager.privateDB.perform(CKQuery(recordType: "cloudkit.share", predicate: NSPredicate(value: true)), inZoneWith: CloudKitManager.photosZone.zoneID) { (records, error) in
+            if let share = records?.first as? CKShare {
+                self.share = share
+                print(share)
             }
         }
         
@@ -61,6 +74,10 @@ class PhotosViewController: UIViewController {
         view.addSubview(collectionView)
         view.addConstraints(format: "H:|[v0]|", views: collectionView)
         view.addConstraints(format: "V:|[v0]|", views: collectionView)
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
+        let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
+        navigationItem.rightBarButtonItems = [addButton, shareButton]
     }
     
     // MARK: - Action
@@ -77,7 +94,9 @@ class PhotosViewController: UIViewController {
     }
     
     @objc func handleShare() {
+        let record = album!.convertToCKRecord()
         
+        continueToShare(share: share!, record: record)
     }
     
     // MARK: - Method
@@ -89,6 +108,11 @@ class PhotosViewController: UIViewController {
             let share = CKShare(rootRecord: record)
             
             prepareToShare(share: share, record: record)
+        } else {
+            let record = album!.convertToCKRecord()
+            let share = CKShare(rootRecord: record)
+            
+            continueToShare(share: share, record: record)
         }
     }
     
@@ -114,17 +138,27 @@ class PhotosViewController: UIViewController {
         navigationController?.present(sharingController, animated: true)
     }
     
+    func continueToShare(share: CKShare, record: CKRecord) {
+        let sharingController = UICloudSharingController(share: share, container: CKContainer.default())
+        sharingController.delegate = self
+        sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
+        
+        navigationController?.present(sharingController, animated: true)
+    }
+    
     var zoneID: CKRecordZone.ID?
     var zoneRecordID: CKRecord.ID?
     
     func fetchSharedPhotos() {
         CloudKitManager.sharedDB.fetchAllRecordZones { zones, error in
-            guard let photoZone = zones?.first else { return }
+            guard let sharedPhotoZone = zones?.first else { return }
 
             self.isParticipant = true
-            let query = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: NSPredicate(value: true))
             
-            CloudKitManager.sharedDB.perform(query, inZoneWith: photoZone.zoneID) { records, error in
+            let predicate = NSPredicate(value: true)
+            let photoQuery = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: predicate)
+            
+            CloudKitManager.sharedDB.perform(photoQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
                 if let photoRecords = records {
                     self.photos = photoRecords.map { Photo(record: $0)}
                     
@@ -132,24 +166,41 @@ class PhotosViewController: UIViewController {
                         self.collectionView.reloadData()
                     }
                     
-                    self.zoneID = photoZone.zoneID
+                    self.zoneID = sharedPhotoZone.zoneID
                     self.zoneRecordID = records?.first?.recordID
                 }
+            }
+            
+            let albumQuery = CKQuery(recordType: CKConstant.RecordType.Albums, predicate: predicate)
+            
+            CloudKitManager.sharedDB.perform(albumQuery, inZoneWith: sharedPhotoZone.zoneID) { records, error in
+                self.sharedRoot = records?.first
+                print(error ?? "Done")
             }
         }
     }
     
+    // Participant Zone: <CKRecordZoneID: 0x280b991c0; ownerName=_a9bdc43038d1f1d3fee0b5b9e5c6010e, zoneName=Photos Zone>
+    // Owner Zone: <CKRecordZoneID: 0x2816a0e60; ownerName=__defaultOwner__, zoneName=Photos Zone>
     func saveSharedPhoto(_ photo: Photo) {
-        let photoRecord = photo.convertToCKRecord()
         if isParticipant {
+            guard let zoneID = sharedRoot?.recordID.zoneID else {
+                return
+            }
+            
+            let recordID = CKRecord.ID(recordName: photo.uuid, zoneID: zoneID)
+            let record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
+            let photoRecord = photo.mergeWithCKRecord(record)
+            
             let shareOperation = CloudKitShareOperation(isOwner: false)
-            let parent = photos.first?.convertToCKRecord()
-            shareOperation.save(record: photoRecord, parent: parent) { success in
+            shareOperation.save(record: photoRecord, parent: sharedRoot) { success in
                 print(success)
             }
         } else {
-            let shareOperation = CloudKitShareOperation(isOwner: true)
+            let photoRecord = photo.convertToCKRecord()
             let albumRecord = album?.convertToCKRecord()
+            
+            let shareOperation = CloudKitShareOperation(isOwner: true)
             shareOperation.save(record: photoRecord, parent: albumRecord) { success in
                 print(success)
             }
@@ -197,12 +248,15 @@ extension PhotosViewController: UICloudSharingControllerDelegate {
 extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        return viewModel.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(forIndexPath: indexPath) as PhotoCollectionCell
-        cell.imageView.image = UIImage(data: photos[indexPath.row].data)
+        
+        let photo = viewModel.photos[indexPath.row]
+        cell.photoView.image = UIImage(data: photo.data)
+        
         return cell
     }
     
@@ -232,17 +286,17 @@ class PhotoCollectionCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var imageView: UIImageView = {
-        let image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        image.clipsToBounds = true
-        return image
+    var photoView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
     func setupViews() {
-        addSubview(imageView)
-        addConstraints(format: "H:|[v0]|", views: imageView)
-        addConstraints(format: "V:|[v0]|", views: imageView)
+        addSubview(photoView)
+        addConstraints(format: "H:|[v0]|", views: photoView)
+        addConstraints(format: "V:|[v0]|", views: photoView)
     }
     
 }

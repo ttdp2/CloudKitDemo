@@ -33,6 +33,7 @@
 		AC41179C24AD62DE00501A5D /* CategoryEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */; };
 		AC41179E24AD62FD00501A5D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179D24AD62FD00501A5D /* Category.swift */; };
 		AC4117A024AD630600501A5D /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC41179F24AD630600501A5D /* Note.swift */; };
+		AC5918E424C13CA30092AD48 /* PhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5918E324C13CA30092AD48 /* PhotosViewModel.swift */; };
 		AC72AC2C24AEA142007CA763 /* RecordProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC72AC2B24AEA142007CA763 /* RecordProtocol.swift */; };
 		ACA2F51124BD677D0037FA62 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2F51024BD677D0037FA62 /* Album.swift */; };
 		ACEC9D1E24B4659100F93559 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEC9D1D24B4659100F93559 /* Photo.swift */; };
@@ -69,6 +70,7 @@
 		AC41179B24AD62DE00501A5D /* CategoryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorViewController.swift; sourceTree = "<group>"; };
 		AC41179D24AD62FD00501A5D /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		AC41179F24AD630600501A5D /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		AC5918E324C13CA30092AD48 /* PhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewModel.swift; sourceTree = "<group>"; };
 		AC72AC2B24AEA142007CA763 /* RecordProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordProtocol.swift; sourceTree = "<group>"; };
 		ACA2F51024BD677D0037FA62 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		ACEC9D1D24B4659100F93559 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				ACEC9D2024B465CC00F93559 /* PhotosViewController.swift */,
+				AC5918E324C13CA30092AD48 /* PhotosViewModel.swift */,
 			);
 			path = "Photos Sharing";
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				AC33F6B6249B340B00C5655B /* IdeasViewController.swift in Sources */,
 				ACEC9D1E24B4659100F93559 /* Photo.swift in Sources */,
 				AC33F699249B2EC800C5655B /* SceneDelegate.swift in Sources */,
+				AC5918E424C13CA30092AD48 /* PhotosViewModel.swift in Sources */,
 				AC33F6C2249B387900C5655B /* UITableView+Extension.swift in Sources */,
 				AC33F6C9249B3BE100C5655B /* CoreDataStack.swift in Sources */,
 				714DBA1524C0841800382F90 /* CloudKitShareOperation.swift in Sources */,
