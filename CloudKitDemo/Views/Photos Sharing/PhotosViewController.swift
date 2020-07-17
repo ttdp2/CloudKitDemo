@@ -25,7 +25,7 @@ class PhotosViewController: UIViewController {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
         let shareButton = UIBarButtonItem(title: "Share", style: .plain, target: self, action: #selector(handleShare))
         
-        navigationItem.rightBarButtonItems = [addButton]
+        navigationItem.rightBarButtonItems = [addButton, shareButton]
         
         viewModel.fetchPhotos {
             self.collectionView.reloadData()
@@ -106,6 +106,7 @@ extension PhotosViewController: UICloudSharingControllerDelegate {
     
     func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
         print("Sharing save successfully")
+        viewModel.fetchShare()
     }
     
     func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
@@ -116,7 +117,6 @@ extension PhotosViewController: UICloudSharingControllerDelegate {
     func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
         print("Sharing save error: \(error)")
     }
-    
     
     func itemTitle(for csc: UICloudSharingController) -> String? {
         return "Shared Album"

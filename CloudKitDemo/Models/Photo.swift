@@ -66,6 +66,7 @@ extension Photo: Record {
         
         let asset = CKAsset(fileURL: imageURL)
         record.setValue(asset, forKey: CKConstant.Field.data)
+        
         return record
     }
     

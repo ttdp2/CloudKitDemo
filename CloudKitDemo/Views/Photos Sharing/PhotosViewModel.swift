@@ -19,8 +19,8 @@ class PhotosViewModel {
     
     weak var delegate: PhotosViewModelDelegate?
     
-    var share: CKShare?
-    var root: CKRecord?
+    var share: CKShare? // cloudkit.share
+    var root: CKRecord? // Albums
     
     var photos: [Photo] = []
     
@@ -38,15 +38,28 @@ class PhotosViewModel {
      Participant Zone: <CKRecordZoneID: 0x280b991c0; ownerName=_a9bdc43038d1f1d3fee0b5b9e5c6010e, zoneName=Photos Zone>
     */
     
+    func fetchShare() {
+        let predicate = NSPredicate(value: true)
+        let shareQuery = CKQuery(recordType: CKConstant.RecordType.CloudKitShare, predicate: predicate)
+        
+        privateDB.perform(shareQuery, inZoneWith: privateZone.zoneID) { records, error in
+            if let record = records?.first as? CKShare {
+                self.share = record
+            }
+        }
+    }
+    
     func fetchPhotos(completion: @escaping () -> Void) {
         let predicate = NSPredicate(value: true)
         let photoQuery = CKQuery(recordType: CKConstant.RecordType.Photos, predicate: predicate)
         let albumQuery = CKQuery(recordType: CKConstant.RecordType.Albums, predicate: predicate)
-        let shareQuery = CKQuery(recordType: CKConstant.RecordType.CloudKitShare, predicate: predicate)
+        
+        // Fetch owner's `share` type record in his private database
+        fetchShare()
         
         // Fetch owner's photos in his private database
         privateDB.perform(photoQuery, inZoneWith: privateZone.zoneID) { records, error in
-            if let photoRecords = records {
+            if let photoRecords = records, !photoRecords.isEmpty {
                 self.photos = photoRecords.map { Photo(record: $0) }
                 
                 DispatchQueue.main.async {
@@ -62,14 +75,6 @@ class PhotosViewModel {
             }
         }
         
-        // Fetch owner's `share` type record in his private database
-        privateDB.perform(shareQuery, inZoneWith: privateZone.zoneID) { records, error in
-            if let record = records?.first as? CKShare {
-                self.share = record
-            }
-        }
-        
-        
         // Fetch shared zones in participant's shared database
         sharedDB.fetchAllRecordZones { zones, error in
             guard let zone = zones?.first else { return }
@@ -80,7 +85,7 @@ class PhotosViewModel {
             
             // Fetch owner's photos in participant's shared database
             self.sharedDB.perform(photoQuery, inZoneWith: zone.zoneID) { records, error in
-                if let photoRecords = records {
+                if let photoRecords = records, !photoRecords.isEmpty {
                     self.photos = photoRecords.map { Photo(record: $0) }
                     
                     DispatchQueue.main.async {
@@ -123,6 +128,7 @@ class PhotosViewModel {
                 print("Participant has no shared zones")
                 return
             }
+            
             let recordID = CKRecord.ID(recordName: photo.uuid, zoneID: zoneID)
             var record = CKRecord(recordType: CKConstant.RecordType.Photos, recordID: recordID)
             record = photo.mergeWithCKRecord(record)
@@ -157,7 +163,6 @@ class PhotosViewModel {
                         print("Owner upload root album error: \(error)")
                     } else {
                         self.root = root
-                        self.share = share
                         print("Owner upload root album successfully")
                     }
                     handler(share, CKContainer.default(), error)
@@ -173,7 +178,6 @@ class PhotosViewModel {
     
     func stopShare() {
         share = nil
-        root = nil
     }
     
 }

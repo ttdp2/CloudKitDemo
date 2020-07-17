@@ -70,31 +70,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let acceptOperation: CKAcceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
         
         acceptOperation.qualityOfService = .userInteractive
-        acceptOperation.perShareCompletionBlock = { meta, share, error in
-            print("Shared successfully")
-        }
-        
-        acceptOperation.acceptSharesCompletionBlock = { error in
+        acceptOperation.acceptSharesCompletionBlock = { _ in
             // go where the user need to go
             print("Here we go")
-            
-            let fetchOperation = CKFetchRecordsOperation(recordIDs: [cloudKitShareMetadata.rootRecordID])
-            
-            fetchOperation.perRecordCompletionBlock = { record, _, error in
-                guard error == nil, record != nil else {
-                    print("Fetch error: \(error!)")
-                    return
-                }
-                
-                print(record!)
-            }
-            
-            fetchOperation.fetchRecordsCompletionBlock = { dic, error in
-                print("Fetched complete")
-                print(dic ?? [:])
-            }
-            
-            CloudKitManager.sharedDB.add(fetchOperation)
         }
         
         CKContainer.default().add(acceptOperation)
